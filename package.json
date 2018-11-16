@@ -4,7 +4,9 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
     "apollo-boost": "^0.1.16",
@@ -15,6 +17,15 @@
     "react": "^16.6.3",
     "react-apollo": "^2.1.11",
     "react-dom": "^16.6.3"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-react": "^7.11.1",
+    "prettier": "^1.15.2"
   },
   "author": "MrOrz",
   "license": "MIT"
