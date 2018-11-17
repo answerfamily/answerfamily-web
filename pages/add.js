@@ -15,16 +15,24 @@ class AddPage extends Component {
 
   handleParagraphAdd = () => {
     this.setState(
-      produce(state => {
-        state.paragraphs.push({ ...EMPTY_PARAGRAPH });
+      produce(({ paragraphs }) => {
+        paragraphs.push({ ...EMPTY_PARAGRAPH });
       })
     );
   };
 
   handleParagraphTextChange = (idx, text) => {
     this.setState(
-      produce(state => {
-        state.paragraphs[idx].text = text;
+      produce(({ paragraphs }) => {
+        paragraphs[idx].text = text;
+      })
+    );
+  };
+
+  handleParagraphDelete = idx => {
+    this.setState(
+      produce(({ paragraphs }) => {
+        paragraphs.splice(idx, 1);
       })
     );
   };
@@ -51,6 +59,7 @@ class AddPage extends Component {
               idx={idx}
               text={text}
               onTextChange={this.handleParagraphTextChange}
+              onDelete={this.handleParagraphDelete}
             />
           ))}
           <button type="button" onClick={this.handleParagraphAdd}>
