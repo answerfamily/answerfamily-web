@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import blueGrey from '@material-ui/core/colors/blueGrey';
+import { produce } from 'immer';
 
 import ParagraphBlock from '../components/ParagraphBlock';
 
@@ -13,17 +14,19 @@ class AddPage extends Component {
   };
 
   handleParagraphAdd = () => {
-    this.setState(({ paragraphs }) => ({
-      paragraphs: [...paragraphs, { ...EMPTY_PARAGRAPH }],
-    }));
+    this.setState(
+      produce(state => {
+        state.paragraphs.push({ ...EMPTY_PARAGRAPH });
+      })
+    );
   };
 
   handleParagraphTextChange = (idx, text) => {
-    this.setState(({ paragraphs }) => {
-      const newParagraphs = paragraphs.slice(0);
-      newParagraphs[idx] = { ...newParagraphs[idx], text };
-      return { paragraphs: newParagraphs };
-    });
+    this.setState(
+      produce(state => {
+        state.paragraphs[idx].text = text;
+      })
+    );
   };
 
   handleSubmit = e => {
