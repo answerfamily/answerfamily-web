@@ -2,9 +2,9 @@
   "name": "answerfamily-web",
   "version": "0.0.1",
   "scripts": {
-    "dev": "next",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node server.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
@@ -19,6 +19,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "js-cookie": "^2.2.0",
     "next": "^7.0.2",
+    "next-routes": "^1.4.2",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-apollo": "^2.1.11",
