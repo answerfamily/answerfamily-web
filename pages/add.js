@@ -17,16 +17,16 @@ function AddPage() {
   return (
     <Mutation mutation={CREATE_ARTCILE}>
       {(createArticle, { data, called, loading, error }) => {
+        if (loading) {
+          return <p>Loading...</p>;
+        }
         if (called && data) {
           return <Redirect to={`/article/${data.createArticle.id}`} />;
         }
-        return (
-          <ArticleForm
-            loading={loading}
-            error={error}
-            createArticle={createArticle}
-          />
-        );
+        if (error) {
+          return <p>Error: {error}</p>;
+        }
+        return <ArticleForm loading={loading} createArticle={createArticle} />;
       }}
     </Mutation>
   );

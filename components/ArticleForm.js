@@ -2,7 +2,7 @@ import { Component } from 'react';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import { produce } from 'immer';
 
-import ParagraphBlock from '../components/ParagraphBlock';
+import NewParagraph from '../components/NewParagraph';
 
 const EMPTY_PARAGRAPH = {
   text: '',
@@ -11,8 +11,6 @@ const EMPTY_PARAGRAPH = {
 class ArticleForm extends Component {
   static defaultProps = {
     createArticle() {},
-    error: null,
-    loading: false,
   };
 
   state = {
@@ -57,7 +55,7 @@ class ArticleForm extends Component {
   };
 
   render() {
-    const { paragraphs, loading } = this.state;
+    const { paragraphs } = this.state;
 
     return (
       <form className="container" onSubmit={this.handleSubmit}>
@@ -66,7 +64,7 @@ class ArticleForm extends Component {
         </section>
         <section className="paragraphs">
           {paragraphs.map(({ text }, idx) => (
-            <ParagraphBlock
+            <NewParagraph
               key={idx}
               idx={idx}
               text={text}
@@ -74,16 +72,10 @@ class ArticleForm extends Component {
               onDelete={this.handleParagraphDelete}
             />
           ))}
-          <button
-            type="button"
-            onClick={this.handleParagraphAdd}
-            disabled={loading}
-          >
+          <button type="button" onClick={this.handleParagraphAdd}>
             Add paragraph
           </button>
-          <button type="submit" disabled={loading}>
-            Submit article and paragraphs
-          </button>
+          <button type="submit">Submit article and paragraphs</button>
         </section>
 
         <style jsx>{`

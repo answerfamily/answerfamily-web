@@ -1,6 +1,6 @@
 import { PureComponent } from 'react';
 
-class ParagraphBlock extends PureComponent {
+class NewParagraph extends PureComponent {
   static defaultProps = {
     idx: 0,
     text: '',
@@ -32,4 +32,4 @@ class ParagraphBlock extends PureComponent {
   }
 }
 
-export default ParagraphBlock;
+export default NewParagraph;

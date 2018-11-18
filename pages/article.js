@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+import ArticleDetail from '../components/ArticleDetail';
 
 export const ARTICLE_PAGE = gql`
   query($id: String!) {
@@ -8,7 +9,16 @@ export const ARTICLE_PAGE = gql`
       id
       text
       paragraphs {
+        id
         text
+        paragraphReplies {
+          createdAt
+          reply {
+            id
+            text
+            createdAt
+          }
+        }
       }
       sources {
         url
@@ -38,7 +48,7 @@ class ArticlePage extends Component {
             return <p>Error: {error}</p>;
           }
 
-          return <code>{JSON.stringify(data, null, '  ')}</code>;
+          return <ArticleDetail article={data.article} />;
         }}
       </Query>
     );
