@@ -19,22 +19,24 @@ const NEW_REPLY = gql`
   }
 `;
 
-function NewReplyForm() {
+function NewReplyForm({ paragraphId }) {
   return (
     <Mutation mutation={NEW_REPLY}>
       {submit => {
         return (
           <form
-            onSubmit={e =>
+            onSubmit={e => {
+              e.preventDefault();
               submit({
                 variables: {
+                  paragraphId,
                   reply: {
                     text: e.target.replyText.value,
                     note: e.target.note.value,
                   },
                 },
-              })
-            }
+              });
+            }}
           >
             <label>
               回應
@@ -193,11 +195,20 @@ class ExistingParagraph extends Component {
         </button>
         {paragraph.text}
         <hr />
+        現有回應
+        <ul>
+          {paragraph.paragraphReplies.map(({ reply }) => (
+            <li key={reply.id}>
+              {reply.text} ({reply.note})
+            </li>
+          ))}
+        </ul>
+        <hr />
         <Tabs onChange={this.handleTabChange} value={tab}>
           <Tab label="寫新的回應" />
           <Tab label="用舊的回應" />
         </Tabs>
-        {tab === 0 && <NewReplyForm />}
+        {tab === 0 && <NewReplyForm paragraphId={paragraph.id} />}
         {tab === 1 && <ExistingReplyForm paragraph={paragraph} />}
       </div>
     );

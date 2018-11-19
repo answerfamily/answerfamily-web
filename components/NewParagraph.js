@@ -5,7 +5,7 @@ class NewParagraph extends PureComponent {
     idx: 0,
     text: '',
     onTextChange() {},
-    onDelete() {},
+    onDelete: null, // If not given, hides delete button
   };
 
   handleTextChange = e => {
@@ -19,14 +19,16 @@ class NewParagraph extends PureComponent {
   };
 
   render() {
-    const { text } = this.props;
+    const { text, onDelete } = this.props;
 
     return (
       <div>
         <textarea value={text} onChange={this.handleTextChange} />
-        <button type="button" onClick={this.handleDelete}>
-          Delete
-        </button>
+        {onDelete && (
+          <button type="button" onClick={this.handleDelete}>
+            刪除
+          </button>
+        )}
       </div>
     );
   }

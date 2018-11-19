@@ -13,11 +13,13 @@ const EMPTY_PARAGRAPH = {
 
 class NewParagraphEditor extends Component {
   state = {
+    articleId: '',
     paragraph: EMPTY_PARAGRAPH,
     createParagraph() {},
   };
 
-  handleSubmit = () => {
+  handleSubmit = e => {
+    e.preventDefault();
     const { articleId, createParagraph } = this.props;
     const { paragraph } = this.state;
     createParagraph({
@@ -103,6 +105,7 @@ class ArticleDetail extends Component {
           <Mutation mutation={NEW_PARAGRAPH}>
             {(createParagraph, { loading }) => (
               <NewParagraphEditor
+                articleId={article.id}
                 createParagraph={createParagraph}
                 loading={loading}
               />

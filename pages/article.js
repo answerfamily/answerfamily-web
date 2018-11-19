@@ -16,6 +16,7 @@ export const ARTICLE_PAGE = gql`
           reply {
             id
             text
+            note
             createdAt
           }
         }
