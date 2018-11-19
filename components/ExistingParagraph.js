@@ -76,19 +76,28 @@ const SUGGEST_REPLY = gql`
 
 const SEARCH_REPLY = gql`
   query($text: String) {
+    replies(filter: { contain: $text }) {
+      ...replyFields
+    }
     paragraphs(filter: { contain: $text }) {
       paragraphReplies {
-        paragraph {
-          id
-          text
-        }
-        createdAt
         reply {
-          id
-          text
-          createdAt
+          ...replyFields
         }
       }
+    }
+  }
+
+  fragment replyFields on Reply {
+    id
+    text
+    createdAt
+    paragraphReplies {
+      paragraph {
+        id
+        text
+      }
+      createdAt
     }
   }
 `;
@@ -97,11 +106,17 @@ const CONNECT_RPELY = gql`
   mutation($replyId: String!, $paragraphId: String!) {
     connectReplyWithParagraph(replyId: $replyId, paragraphId: $paragraphId) {
       paragraphReplies {
-        createdAt
         reply {
           id
           text
           createdAt
+          paragraphReplies {
+            paragraph {
+              id
+              text
+            }
+            createdAt
+          }
         }
       }
     }
@@ -123,13 +138,13 @@ function ConnectReplyButton({ replyId, paragraphId }) {
   );
 }
 
-function ParagraphReplyList({ paragraphId = '', paragraphReplies = [] }) {
+function ReplyList({ paragraphId = '', replies = [] }) {
   return (
     <ul>
-      {paragraphReplies.map(pr => (
-        <li key={pr.id}>
-          {pr.reply.text}{' '}
-          <ConnectReplyButton replyId={pr.reply.id} paragraphId={paragraphId} />
+      {replies.map(reply => (
+        <li key={reply.id}>
+          {reply.text}{' '}
+          <ConnectReplyButton replyId={reply.id} paragraphId={paragraphId} />
         </li>
       ))}
     </ul>
@@ -167,15 +182,29 @@ class ExistingReplyForm extends Component {
             {({ data, loading }) => {
               if (loading) return <p>Loading</p>;
 
-              const paragraphReplies = data.paragraphs.reduce(
-                (prs, paragraph) => prs.concat(paragraph.paragraphReplies),
+              const repliesFromSimilarParagraphs = data.paragraphs.reduce(
+                (replies, paragraph) =>
+                  replies.concat(
+                    paragraph.paragraphReplies.reduce(
+                      (replies, pr) => replies.concat(pr.reply),
+                      []
+                    )
+                  ),
                 []
               );
               return (
-                <ParagraphReplyList
-                  paragraphId={paragraph.id}
-                  paragraphReplies={paragraphReplies}
-                />
+                <div>
+                  有「{searchedText}」在內的回應
+                  <ReplyList
+                    paragraphId={paragraph.id}
+                    replies={data.replies}
+                  />
+                  有「{searchedText}」在內的文章的回應
+                  <ReplyList
+                    paragraphId={paragraph.id}
+                    replies={repliesFromSimilarParagraphs}
+                  />
+                </div>
               );
             }}
           </Query>
@@ -184,16 +213,17 @@ class ExistingReplyForm extends Component {
             {({ data, loading }) => {
               if (loading) return <p>Loading</p>;
 
-              const paragraphReplies = data.paragraphs.reduce(
-                (prs, paragraph) => prs.concat(paragraph.paragraphReplies),
+              const replies = data.paragraphs.reduce(
+                (replies, paragraph) =>
+                  replies.concat(
+                    paragraph.paragraphReplies.reduce(
+                      (replies, pr) => replies.concat(pr.reply),
+                      []
+                    )
+                  ),
                 []
               );
-              return (
-                <ParagraphReplyList
-                  paragraphId={paragraph.id}
-                  paragraphReplies={paragraphReplies}
-                />
-              );
+              return <ReplyList paragraphId={paragraph.id} replies={replies} />;
             }}
           </Query>
         )}
