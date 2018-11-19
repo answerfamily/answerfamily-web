@@ -54,6 +54,45 @@ function NewReplyForm({ paragraphId }) {
   );
 }
 
+const SUGGEST_REPLY = gql`
+  query($text: String) {
+    paragraphs(filter: { inText: $text }) {
+      paragraphReplies {
+        paragraph {
+          id
+          text
+        }
+        id
+        createdAt
+        reply {
+          id
+          text
+          createdAt
+        }
+      }
+    }
+  }
+`;
+
+const SEARCH_REPLY = gql`
+  query($text: String) {
+    paragraphs(filter: { contain: $text }) {
+      paragraphReplies {
+        paragraph {
+          id
+          text
+        }
+        createdAt
+        reply {
+          id
+          text
+          createdAt
+        }
+      }
+    }
+  }
+`;
+
 const CONNECT_RPELY = gql`
   mutation($replyId: String!, $paragraphId: String!) {
     connectReplyWithParagraph(replyId: $replyId, paragraphId: $paragraphId) {
@@ -84,39 +123,18 @@ function ConnectReplyButton({ replyId, paragraphId }) {
   );
 }
 
-const SUGGEST_REPLY = gql`
-  query($text: String) {
-    paragraphs(filter: { inText: $text }) {
-      id
-      text
-      paragraphReplies {
-        createdAt
-        reply {
-          id
-          text
-          createdAt
-        }
-      }
-    }
-  }
-`;
-
-const SEARCH_REPLY = gql`
-  query($text: String) {
-    paragraphs(filter: { contain: $text }) {
-      id
-      text
-      paragraphReplies {
-        createdAt
-        reply {
-          id
-          text
-          createdAt
-        }
-      }
-    }
-  }
-`;
+function ParagraphReplyList({ paragraphId = '', paragraphReplies = [] }) {
+  return (
+    <ul>
+      {paragraphReplies.map(pr => (
+        <li key={pr.id}>
+          {pr.reply.text}{' '}
+          <ConnectReplyButton replyId={pr.reply.id} paragraphId={paragraphId} />
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 class ExistingReplyForm extends Component {
   static defaultProps = {
@@ -148,8 +166,17 @@ class ExistingReplyForm extends Component {
           <Query query={SEARCH_REPLY} variables={{ text: searchedText }}>
             {({ data, loading }) => {
               if (loading) return <p>Loading</p>;
-              // const replyId = ;
-              return <p>{JSON.stringify(data)}</p>;
+
+              const paragraphReplies = data.paragraphs.reduce(
+                (prs, paragraph) => prs.concat(paragraph.paragraphReplies),
+                []
+              );
+              return (
+                <ParagraphReplyList
+                  paragraphId={paragraph.id}
+                  paragraphReplies={paragraphReplies}
+                />
+              );
             }}
           </Query>
         ) : (
@@ -157,7 +184,16 @@ class ExistingReplyForm extends Component {
             {({ data, loading }) => {
               if (loading) return <p>Loading</p>;
 
-              return <p>{JSON.stringify(data)}</p>;
+              const paragraphReplies = data.paragraphs.reduce(
+                (prs, paragraph) => prs.concat(paragraph.paragraphReplies),
+                []
+              );
+              return (
+                <ParagraphReplyList
+                  paragraphId={paragraph.id}
+                  paragraphReplies={paragraphReplies}
+                />
+              );
             }}
           </Query>
         )}
