@@ -20,11 +20,40 @@ const NEW_REPLY = gql`
 `;
 
 function NewReplyForm() {
-  return <Mutation mutation={NEW_REPLY}>{}</Mutation>;
+  return (
+    <Mutation mutation={NEW_REPLY}>
+      {submit => {
+        return (
+          <form
+            onSubmit={e =>
+              submit({
+                variables: {
+                  reply: {
+                    text: e.target.replyText.value,
+                    note: e.target.note.value,
+                  },
+                },
+              })
+            }
+          >
+            <label>
+              回應
+              <textarea name="replyText" />
+            </label>
+            <label>
+              給其他編輯的悄悄話
+              <textarea name="note" />
+            </label>
+            <button type="submit">送出回應</button>
+          </form>
+        );
+      }}
+    </Mutation>
+  );
 }
 
 const CONNECT_RPELY = gql`
-  mutation($replyId: String!, $paragraphId: String!) ){
+  mutation($replyId: String!, $paragraphId: String!) {
     connectReplyWithParagraph(replyId: $replyId, paragraphId: $paragraphId) {
       paragraphReplies {
         createdAt
@@ -35,7 +64,8 @@ const CONNECT_RPELY = gql`
         }
       }
     }
-  }`;
+  }
+`;
 
 function ConnectReplyButton({ replyId, paragraphId }) {
   return (
@@ -71,7 +101,7 @@ const SUGGEST_REPLY = gql`
 
 const SEARCH_REPLY = gql`
   query($text: String) {
-    paragraphs(filter: { contains: $text }) {
+    paragraphs(filter: { contain: $text }) {
       id
       text
       paragraphReplies {
@@ -94,17 +124,27 @@ class ExistingReplyForm extends Component {
 
   state = { searchedText: '' };
 
+  handleSearch = e => {
+    e.preventDefault();
+    this.setState({
+      searchedText: e.target.searchInput.value,
+    });
+  };
+
   render() {
     const { paragraph } = this.props;
     const { searchedText } = this.state;
 
     return (
       <div>
-        <input type="search" value={searchedText} />
+        <form onSubmit={this.handleSearch}>
+          <input type="search" name="searchInput" />
+          <button type="submit">搜尋</button>
+        </form>
         <hr />
         {searchedText ? (
           <Query query={SEARCH_REPLY} variables={{ text: searchedText }}>
-            {(data, loading) => {
+            {({ data, loading }) => {
               if (loading) return <p>Loading</p>;
               // const replyId = ;
               return <p>{JSON.stringify(data)}</p>;
@@ -112,7 +152,7 @@ class ExistingReplyForm extends Component {
           </Query>
         ) : (
           <Query query={SUGGEST_REPLY} variables={{ text: paragraph.text }}>
-            {(data, loading) => {
+            {({ data, loading }) => {
               if (loading) return <p>Loading</p>;
 
               return <p>{JSON.stringify(data)}</p>;

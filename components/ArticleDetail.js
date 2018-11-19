@@ -52,9 +52,9 @@ class NewParagraphEditor extends Component {
 }
 
 const NEW_PARAGRAPH = gql`
-  mutation(articleId: String!, paragraph: ParagraphInput!){
+  mutation($articleId: String!, $paragraph: ParagraphInput!) {
     addParagraphToArticle(articleId: $articleId, paragraph: $paragraph) {
-
+      id
     }
   }
 `;
