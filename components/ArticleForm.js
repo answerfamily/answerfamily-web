@@ -3,6 +3,7 @@ import blueGrey from '@material-ui/core/colors/blueGrey';
 import { produce } from 'immer';
 
 import NewParagraph from '../components/NewParagraph';
+import SourcesForm from '../components/SourcesForm';
 
 const EMPTY_PARAGRAPH = {
   text: '',
@@ -10,17 +11,28 @@ const EMPTY_PARAGRAPH = {
 
 class ArticleForm extends Component {
   static defaultProps = {
-    createArticle() {},
+    onSubmit() {},
   };
 
   state = {
+    text: '',
     paragraphs: [],
+    sources: [],
   };
 
   handleParagraphAdd = () => {
     this.setState(
       produce(({ paragraphs }) => {
         paragraphs.push({ ...EMPTY_PARAGRAPH });
+      })
+    );
+  };
+
+  handleTextChange = e => {
+    const text = e.target.value;
+    this.setState(
+      produce(state => {
+        state.text = text;
       })
     );
   };
@@ -41,26 +53,44 @@ class ArticleForm extends Component {
     );
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    const { paragraphs } = this.state;
-    this.props.createArticle({
-      variables: {
-        article: {
-          text: e.target.article.value,
-          paragraphs,
-        },
-      },
-    });
+  handleSourceAdd = source => {
+    this.setState(
+      produce(({ sources }) => {
+        sources.push(source);
+      })
+    );
+  };
+
+  handleSourceDelete = idx => {
+    this.setState(
+      produce(({ sources }) => {
+        sources.splice(idx, 1);
+      })
+    );
+  };
+
+  handleSubmit = () => {
+    const { paragraphs, text, sources } = this.state;
+    const article = { text, paragraphs, sources };
+    this.props.onSubmit(article);
   };
 
   render() {
-    const { paragraphs } = this.state;
+    const { paragraphs, sources, text } = this.state;
 
     return (
-      <form className="container" onSubmit={this.handleSubmit}>
+      <div className="container">
         <section className="article">
-          <textarea name="article" />
+          <SourcesForm
+            sources={sources}
+            onAdd={this.handleSourceAdd}
+            onDelete={this.handleSourceDelete}
+          />
+          <textarea
+            name="article"
+            value={text}
+            onChange={this.handleTextChange}
+          />
         </section>
         <section className="paragraphs">
           {paragraphs.map(({ text }, idx) => (
@@ -73,9 +103,11 @@ class ArticleForm extends Component {
             />
           ))}
           <button type="button" onClick={this.handleParagraphAdd}>
-            Add paragraph
+            新增段落
           </button>
-          <button type="submit">Submit article and paragraphs</button>
+          <button type="button" onClick={this.handleSubmit}>
+            送出文章與段落
+          </button>
         </section>
 
         <style jsx>{`
@@ -110,7 +142,7 @@ class ArticleForm extends Component {
             flex: 1;
           }
         `}</style>
-      </form>
+      </div>
     );
   }
 }

@@ -26,7 +26,12 @@ function AddPage() {
         if (error) {
           return <p>Error: {error}</p>;
         }
-        return <ArticleForm loading={loading} createArticle={createArticle} />;
+        return (
+          <ArticleForm
+            loading={loading}
+            onSubmit={article => createArticle({ variables: { article } })}
+          />
+        );
       }}
     </Mutation>
   );
