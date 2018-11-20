@@ -1,32 +1,15 @@
 import { Component } from 'react';
-import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 import ArticleDetail from '../components/ArticleDetail';
 
-export const ARTICLE_PAGE = gql`
+export const GET_ARTICLE = gql`
   query($id: String!) {
     article(id: $id) {
-      id
-      text
-      paragraphs {
-        id
-        text
-        paragraphReplies {
-          createdAt
-          reply {
-            id
-            text
-            note
-            createdAt
-          }
-        }
-      }
-      sources {
-        url
-        note
-      }
+      ...articleDetail
     }
   }
+  ${ArticleDetail.fragments.article}
 `;
 
 class ArticlePage extends Component {
@@ -39,7 +22,7 @@ class ArticlePage extends Component {
   render() {
     const { id } = this.props;
     return (
-      <Query query={ARTICLE_PAGE} variables={{ id: id }}>
+      <Query query={GET_ARTICLE} variables={{ id: id }}>
         {({ loading, error, data }) => {
           if (loading) {
             return <p>Loading...</p>;

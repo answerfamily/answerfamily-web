@@ -7,6 +7,39 @@ import { Mutation } from 'react-apollo';
 import NewParagraph from '../components/NewParagraph';
 import ExistingParagraph from '../components/ExistingParagraph';
 
+const articleFragment = gql`
+  fragment articleDetail on Article {
+    id
+    text
+    paragraphs {
+      ...articleDetailParagraph
+    }
+    sources {
+      url
+      note
+    }
+  }
+  ${ExistingParagraph.fragments.paragraph}
+`;
+
+const NEW_PARAGRAPH = gql`
+  mutation($articleId: String!, $paragraph: ParagraphInput!) {
+    addParagraphToArticle(articleId: $articleId, paragraph: $paragraph) {
+      ...articleDetail
+    }
+  }
+  ${articleFragment}
+`;
+
+const DELETE_PARAGRAPH = gql`
+  mutation($paragraphId: String!) {
+    deleteParagraph(paragraphId: $paragraphId) {
+      ...articleDetail
+    }
+  }
+  ${articleFragment}
+`;
+
 const EMPTY_PARAGRAPH = {
   text: '',
 };
@@ -53,25 +86,13 @@ class NewParagraphEditor extends Component {
   }
 }
 
-const NEW_PARAGRAPH = gql`
-  mutation($articleId: String!, $paragraph: ParagraphInput!) {
-    addParagraphToArticle(articleId: $articleId, paragraph: $paragraph) {
-      id
-    }
-  }
-`;
-
-const DELETE_PARAGRAPH = gql`
-  mutation($paragraphId: String!) {
-    deleteParagraph(paragraphId: $paragraphId) {
-      id
-    }
-  }
-`;
-
 class ArticleDetail extends Component {
   static defaultProps = {
     createArticle() {},
+  };
+
+  static fragments = {
+    article: articleFragment,
   };
 
   handleParagraphDelete = idx => {

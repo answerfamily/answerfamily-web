@@ -4,19 +4,29 @@ import Tab from '@material-ui/core/Tab';
 import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
 
-const NEW_REPLY = gql`
-  mutation($paragraphId: String!, $reply: ReplyInput!) {
-    addReplyToParagraph(paragraphId: $paragraphId, reply: $reply) {
-      paragraphReplies {
+const paragraphFragment = gql`
+  fragment articleDetailParagraph on Paragraph {
+    id
+    text
+    paragraphReplies {
+      createdAt
+      reply {
+        id
+        text
+        note
         createdAt
-        reply {
-          id
-          text
-          createdAt
-        }
       }
     }
   }
+`;
+
+const NEW_REPLY = gql`
+  mutation($paragraphId: String!, $reply: ReplyInput!) {
+    addReplyToParagraph(paragraphId: $paragraphId, reply: $reply) {
+      ...articleDetailParagraph
+    }
+  }
+  ${paragraphFragment}
 `;
 
 function NewReplyForm({ paragraphId }) {
@@ -105,22 +115,10 @@ const SEARCH_REPLY = gql`
 const CONNECT_RPELY = gql`
   mutation($replyId: String!, $paragraphId: String!) {
     connectReplyWithParagraph(replyId: $replyId, paragraphId: $paragraphId) {
-      paragraphReplies {
-        reply {
-          id
-          text
-          createdAt
-          paragraphReplies {
-            paragraph {
-              id
-              text
-            }
-            createdAt
-          }
-        }
-      }
+      ...articleDetailParagraph
     }
   }
+  ${paragraphFragment}
 `;
 
 function ConnectReplyButton({ replyId, paragraphId }) {
@@ -236,6 +234,10 @@ class ExistingParagraph extends Component {
   static defaultProps = {
     paragraph: null, // should be an object
     onDelete() {},
+  };
+
+  static fragments = {
+    paragraph: paragraphFragment,
   };
 
   state = {
