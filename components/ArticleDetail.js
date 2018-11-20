@@ -6,6 +6,7 @@ import { Mutation } from 'react-apollo';
 
 import NewParagraph from '../components/NewParagraph';
 import ExistingParagraph from '../components/ExistingParagraph';
+import SourcesForm from '../components/SourcesForm';
 
 const articleFragment = gql`
   fragment articleDetail on Article {
@@ -109,7 +110,10 @@ class ArticleDetail extends Component {
 
     return (
       <div className="container">
-        <section className="article">{article.text}</section>
+        <section className="article">
+          <SourcesForm sources={article.sources} />
+          {article.text}
+        </section>
         <section className="paragraphs">
           {paragraphs.map(paragraph => (
             <Mutation key={paragraph.id} mutation={DELETE_PARAGRAPH}>
