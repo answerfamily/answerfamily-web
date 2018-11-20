@@ -152,14 +152,14 @@ class ArticleDetail extends Component {
           }
 
           .paragraphs {
-            flex: 1;
+            flex: 1 0 0;
             background: ${blueGrey[50]};
+            overflow-y: scroll;
           }
 
           .article {
-            flex: 1;
-            display: flex;
-            flex-flow: column;
+            flex: 1 0 0;
+            overflow-y: scroll;
           }
 
           .article textarea {
