@@ -1,13 +1,15 @@
-import { Component } from 'react';
+import { Component, Fragment } from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
+import RequireLogin from './RequireLogin';
 
 const paragraphFragment = gql`
   fragment articleDetailParagraph on Paragraph {
     id
     text
+    canDelete
     paragraphReplies {
       createdAt
       reply {
@@ -258,9 +260,16 @@ class ExistingParagraph extends Component {
     const { tab } = this.state;
     return (
       <div>
-        <button type="button" onClick={this.handleDelete}>
-          Delete
-        </button>
+        <RequireLogin>
+          {({ me }) =>
+            me &&
+            paragraph.canEdit && (
+              <button type="button" onClick={this.handleDelete}>
+                Delete
+              </button>
+            )
+          }
+        </RequireLogin>
         {paragraph.text}
         <hr />
         現有回應
@@ -271,13 +280,28 @@ class ExistingParagraph extends Component {
             </li>
           ))}
         </ul>
-        <hr />
-        <Tabs onChange={this.handleTabChange} value={tab}>
-          <Tab label="寫新的回應" />
-          <Tab label="用舊的回應" />
-        </Tabs>
-        {tab === 0 && <NewReplyForm paragraphId={paragraph.id} />}
-        {tab === 1 && <ExistingReplyForm paragraph={paragraph} />}
+        <RequireLogin>
+          {({ me, authorize }) => {
+            if (!me) {
+              return (
+                <p>
+                  請<button onClick={authorize}>登入</button>來送出回應
+                </p>
+              );
+            }
+            return (
+              <Fragment>
+                <hr />
+                <Tabs onChange={this.handleTabChange} value={tab}>
+                  <Tab label="寫新的回應" />
+                  <Tab label="用舊的回應" />
+                </Tabs>
+                {tab === 0 && <NewReplyForm paragraphId={paragraph.id} />}
+                {tab === 1 && <ExistingReplyForm paragraph={paragraph} />}
+              </Fragment>
+            );
+          }}
+        </RequireLogin>
       </div>
     );
   }
