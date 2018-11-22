@@ -52,7 +52,7 @@ class Index extends Component {
         <Mutation mutation={SET_SEARCH_TEXT}>
           {search => (
             <ArticleSearchForm
-              onSubmit={article => search({ variables: { article } })}
+              onSubmit={text => search({ variables: { text } })}
             />
           )}
         </Mutation>

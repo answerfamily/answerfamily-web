@@ -20,14 +20,7 @@ class ParagraphSearch extends Component {
 
     return (
       <div className="container">
-        <section className="article">
-          {text}
-          <textarea
-            name="article"
-            value={text}
-            onChange={this.handleTextChange}
-          />
-        </section>
+        <section className="article">{text}</section>
         <section className="paragraphs">
           {paragraphs.map(({ text }, idx) => (
             <NewParagraph key={idx} idx={idx} text={text} />
