@@ -1,9 +1,39 @@
 import { Component } from 'react';
+import Router from 'next/router';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import ParagraphList from '../components/ParagraphList';
 import ParagraphReplyList from '../components/ParagraphReplyList';
+
+const SET_SEARCH_TEXT = gql`
+  mutation($text: String!) {
+    setSearchedText(text: $text) @client
+  }
+`;
+
+class ArticleSearchForm extends Component {
+  static defaultProps = {
+    onSubmit() {},
+  };
+
+  handleSearch = e => {
+    e.preventDefault();
+    this.props.onSubmit(e.target.searchedText.value);
+    Router.push('/search');
+  };
+
+  render() {
+    return (
+      <form onSubmit={this.handleSearch}>
+        <textarea name="searchedText" />
+        <button type="submit">看說法</button>
+      </form>
+    );
+  }
+}
 
 class Index extends Component {
   state = {
@@ -19,6 +49,13 @@ class Index extends Component {
 
     return (
       <div>
+        <Mutation mutation={SET_SEARCH_TEXT}>
+          {search => (
+            <ArticleSearchForm
+              onSubmit={article => search({ variables: { article } })}
+            />
+          )}
+        </Mutation>
         <Tabs onChange={this.handleTabChange} value={tab}>
           <Tab label="Paragraph Reply" />
           <Tab label="Paragraphs" />
