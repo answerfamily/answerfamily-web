@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import NewParagraph from './NewParagraph';
+import RequireLogin from './RequireLogin';
 
 class ParagraphSearch extends Component {
   static defaultProps = {
@@ -25,6 +26,28 @@ class ParagraphSearch extends Component {
           {paragraphs.map(({ text }, idx) => (
             <NewParagraph key={idx} idx={idx} text={text} />
           ))}
+
+          <RequireLogin>
+            {({ me, authorize }) => {
+              if (me) {
+                return (
+                  <button type="button" onClick={this.handleSubmit}>
+                    送出文章
+                  </button>
+                );
+              }
+
+              return (
+                <p>
+                  請先{' '}
+                  <button type="button" onClick={authorize}>
+                    登入
+                  </button>{' '}
+                  才能送出文章
+                </p>
+              );
+            }}
+          </RequireLogin>
         </section>
 
         <style jsx>{`
