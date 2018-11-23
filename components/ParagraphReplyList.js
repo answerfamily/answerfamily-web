@@ -4,6 +4,7 @@ import { Query } from 'react-apollo';
 const LIST_ARTICLES = gql`
   {
     paragraphReplies {
+      id
       paragraph {
         id
         text
