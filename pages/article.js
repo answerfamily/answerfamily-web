@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+
+import App from '../components/App';
 import ArticleDetail from '../components/ArticleDetail';
 
 export const GET_ARTICLE = gql`
@@ -22,19 +24,21 @@ class ArticlePage extends Component {
   render() {
     const { id } = this.props;
     return (
-      <Query query={GET_ARTICLE} variables={{ id: id }}>
-        {({ loading, error, data }) => {
-          if (loading) {
-            return <p>Loading...</p>;
-          }
+      <App>
+        <Query query={GET_ARTICLE} variables={{ id: id }}>
+          {({ loading, error, data }) => {
+            if (loading) {
+              return <p>Loading...</p>;
+            }
 
-          if (error) {
-            return <p>Error: {error}</p>;
-          }
+            if (error) {
+              return <p>Error: {error}</p>;
+            }
 
-          return <ArticleDetail article={data.article} />;
-        }}
-      </Query>
+            return <ArticleDetail article={data.article} />;
+          }}
+        </Query>
+      </App>
     );
   }
 }

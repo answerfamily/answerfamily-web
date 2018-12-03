@@ -1,12 +1,13 @@
-import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { authorize } from '../lib/auth0';
+import gql from 'graphql-tag';
+import { authorize, logout } from '../lib/auth0';
 import { dehydrate, setLoginRedirect } from '../lib/auth';
 
 const ME = gql`
   {
     me {
       id
+      name
     }
   }
 `;
@@ -28,6 +29,10 @@ function RequireLogin({ children }) {
             setLoginRedirect();
             dehydrate(client);
             authorize();
+          },
+          deauthorize: () => {
+            setLoginRedirect();
+            logout();
           },
         }) || null // ensure return null when render nothing
       }

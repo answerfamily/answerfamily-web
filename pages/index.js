@@ -5,6 +5,7 @@ import Tab from '@material-ui/core/Tab';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
+import App from '../components/App';
 import ParagraphList from '../components/ParagraphList';
 import ParagraphReplyList from '../components/ParagraphReplyList';
 
@@ -48,7 +49,7 @@ class Index extends Component {
     const { tab } = this.state;
 
     return (
-      <div>
+      <App>
         <Mutation mutation={SET_SEARCH_TEXT}>
           {search => (
             <ArticleSearchForm
@@ -62,7 +63,7 @@ class Index extends Component {
         </Tabs>
         {tab === 0 && <ParagraphReplyList />}
         {tab === 1 && <ParagraphList />}
-      </div>
+      </App>
     );
   }
 }

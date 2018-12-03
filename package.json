@@ -23,7 +23,8 @@
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "react-apollo": "^2.1.11",
-    "react-dom": "^16.6.3"
+    "react-dom": "^16.6.3",
+    "react-jss": "^8.6.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
