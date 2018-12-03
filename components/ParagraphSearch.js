@@ -74,6 +74,7 @@ class ParagraphSearch extends Component {
 
           .article {
             flex: 1;
+            min-width: 0;
             display: flex;
             flex-flow: column;
           }
