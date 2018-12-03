@@ -1,3 +1,5 @@
+import AppBar from './AppBar';
+
 /**
  * Evenly split the screen to each children.
  * When screen is landscape, do a vertical split; else, do a horizontal split.
@@ -6,9 +8,16 @@
  */
 function SplitLayout({ children }) {
   return (
-    <div className="container">
-      {children}
+    <div className="layout">
+      <AppBar />
+      <div className="container">{children}</div>
       <style jsx>{`
+        .layout {
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+        }
+
         .container {
           display: flex;
           flex: 1;
