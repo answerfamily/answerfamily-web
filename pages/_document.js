@@ -22,11 +22,10 @@ export default class MyDocument extends Document {
             {`
               body {
                 font-family: 蘋方-繁, PingFang TC, 思源黑體, Source Han Sans, Noto Sans CJK TC, sans-serif;
-                min-height: 100vh;
               }
 
               #__next {
-                min-height: 100vh;
+                height: 100vh;
                 display: flex;
                 flex-flow: column;
               }

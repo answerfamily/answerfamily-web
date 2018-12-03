@@ -2,6 +2,7 @@ import { Component } from 'react';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import NewParagraph from './NewParagraph';
 import RequireLogin from './RequireLogin';
+import SplitLayout from './SplitLayout';
 
 class ParagraphSearch extends Component {
   static defaultProps = {
@@ -20,7 +21,7 @@ class ParagraphSearch extends Component {
     const { paragraphs, text } = this.props;
 
     return (
-      <div className="container">
+      <SplitLayout>
         <section className="article">{text}</section>
         <section className="paragraphs">
           {paragraphs.map(({ text }, idx) => (
@@ -51,39 +52,16 @@ class ParagraphSearch extends Component {
         </section>
 
         <style jsx>{`
-          .container {
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            display: flex;
-            flex-flow: column;
-          }
-
-          @media (min-aspect-ratio: 1/1) {
-            .container {
-              flex-flow: row;
-            }
-          }
-
           .paragraphs {
-            flex: 1;
             background: ${blueGrey[50]};
           }
 
           .article {
-            flex: 1;
-            min-width: 0;
             display: flex;
             flex-flow: column;
           }
-
-          .article textarea {
-            flex: 1;
-          }
         `}</style>
-      </div>
+      </SplitLayout>
     );
   }
 }

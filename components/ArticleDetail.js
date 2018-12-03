@@ -7,6 +7,7 @@ import { Mutation } from 'react-apollo';
 import NewParagraph from '../components/NewParagraph';
 import ExistingParagraph from '../components/ExistingParagraph';
 import SourcesForm from '../components/SourcesForm';
+import SplitLayout from './SplitLayout';
 
 const articleFragment = gql`
   fragment articleDetail on Article {
@@ -109,7 +110,7 @@ class ArticleDetail extends Component {
     const paragraphs = article.paragraphs;
 
     return (
-      <div className="container">
+      <SplitLayout>
         <section className="article">
           <SourcesForm sources={article.sources} />
           {article.text}
@@ -139,38 +140,11 @@ class ArticleDetail extends Component {
         </section>
 
         <style jsx>{`
-          .container {
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            display: flex;
-            flex-flow: column;
-          }
-
-          @media (min-aspect-ratio: 1/1) {
-            .container {
-              flex-flow: row;
-            }
-          }
-
           .paragraphs {
-            flex: 1 0 0;
             background: ${blueGrey[50]};
-            overflow-y: scroll;
-          }
-
-          .article {
-            flex: 1 0 0;
-            overflow-y: scroll;
-          }
-
-          .article textarea {
-            flex: 1;
           }
         `}</style>
-      </div>
+      </SplitLayout>
     );
   }
 }
