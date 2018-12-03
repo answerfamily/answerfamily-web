@@ -9,7 +9,7 @@ import { Link } from '../routes';
 
 function App({ children }) {
   return (
-    <div>
+    <>
       <AppBar position="static" color="default">
         <Toolbar>
           <Typography variant="h6" color="inherit">
@@ -35,7 +35,7 @@ function App({ children }) {
         </Toolbar>
       </AppBar>
       {children}
-    </div>
+    </>
   );
 }
 
