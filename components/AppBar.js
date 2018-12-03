@@ -7,9 +7,9 @@ import Button from '@material-ui/core/Button';
 import RequireLogin from './RequireLogin';
 import { Link } from '../routes';
 
-function AppBar({ children }) {
+function AppBar({ children, position = 'static' }) {
   return (
-    <MuiAppBar position="static" color="default">
+    <MuiAppBar position={position} color="default">
       <Toolbar>
         <Typography variant="h6" color="inherit">
           <Link route="/">

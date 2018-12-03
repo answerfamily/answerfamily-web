@@ -2,6 +2,7 @@ import { Component } from 'react';
 import Router from 'next/router';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { withTheme } from '@material-ui/core/styles';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
@@ -46,27 +47,39 @@ class Index extends Component {
   };
 
   render() {
+    const { theme } = this.props;
     const { tab } = this.state;
 
     return (
-      <div>
-        <AppBar />
-        <Mutation mutation={SET_SEARCH_TEXT}>
-          {search => (
-            <ArticleSearchForm
-              onSubmit={text => search({ variables: { text } })}
-            />
-          )}
-        </Mutation>
+      <>
+        <AppBar position="fixed" />
+        <header className="jumbotron">
+          <Mutation mutation={SET_SEARCH_TEXT}>
+            {search => (
+              <ArticleSearchForm
+                onSubmit={text => search({ variables: { text } })}
+              />
+            )}
+          </Mutation>
+        </header>
         <Tabs onChange={this.handleTabChange} value={tab}>
           <Tab label="Paragraph Reply" />
           <Tab label="Paragraphs" />
         </Tabs>
         {tab === 0 && <ParagraphReplyList />}
         {tab === 1 && <ParagraphList />}
-      </div>
+
+        <style jsx>{`
+          .jumbotron {
+            position: relative;
+            z-index: ${theme.zIndex.appBar + 1}; /* Higher than AppBar */
+            background: #fff;
+            padding: 20px;
+          }
+        `}</style>
+      </>
     );
   }
 }
 
-export default Index;
+export default withTheme()(Index);
