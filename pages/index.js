@@ -51,7 +51,7 @@ class Index extends Component {
     const { tab } = this.state;
 
     return (
-      <>
+      <div>
         <AppBar position="fixed" />
         <header className="jumbotron">
           <Mutation mutation={SET_SEARCH_TEXT}>
@@ -77,7 +77,7 @@ class Index extends Component {
             padding: 20px;
           }
         `}</style>
-      </>
+      </div>
     );
   }
 }
