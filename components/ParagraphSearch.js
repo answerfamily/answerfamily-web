@@ -1,14 +1,13 @@
 import { Component } from 'react';
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import NewParagraph from './NewParagraph';
 import RequireLogin from './RequireLogin';
 import SplitLayout from './SplitLayout';
+import RelatedParagraphList from './RelatedParagraphList';
 
 class ParagraphSearch extends Component {
   static defaultProps = {
     onSubmit() {},
     text: '',
-    paragraphs: [],
   };
 
   handleSubmit = () => {
@@ -18,15 +17,13 @@ class ParagraphSearch extends Component {
   };
 
   render() {
-    const { paragraphs, text } = this.props;
+    const { text } = this.props;
 
     return (
       <SplitLayout>
         <section className="article">{text}</section>
         <section className="paragraphs">
-          {paragraphs.map(({ text }, idx) => (
-            <NewParagraph key={idx} idx={idx} text={text} />
-          ))}
+          <RelatedParagraphList inText={text} />
 
           <RequireLogin>
             {({ me, authorize }) => {
