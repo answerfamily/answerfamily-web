@@ -63,6 +63,11 @@ class NewParagraphEditor extends Component {
         paragraph,
       },
     });
+    this.setState(
+      produce(state => {
+        state.paragraph = EMPTY_PARAGRAPH;
+      })
+    );
   };
 
   handleParagraphTextChange = (_, text) => {
@@ -115,18 +120,20 @@ class ArticleDetail extends Component {
           <SourcesForm sources={article.sources} />
           {article.text}
         </section>
-        <section className="paragraphs">
-          {paragraphs.map(paragraph => (
-            <Mutation key={paragraph.id} mutation={DELETE_PARAGRAPH}>
-              {(deleteParagraph, { loading }) => (
-                <ExistingParagraph
-                  paragraph={paragraph}
-                  loading={loading}
-                  deleteParagraph={deleteParagraph}
-                />
-              )}
-            </Mutation>
-          ))}
+        <section className="paragraph-panel">
+          <div className="paragraphs">
+            {paragraphs.map(paragraph => (
+              <Mutation key={paragraph.id} mutation={DELETE_PARAGRAPH}>
+                {(deleteParagraph, { loading }) => (
+                  <ExistingParagraph
+                    paragraph={paragraph}
+                    loading={loading}
+                    deleteParagraph={deleteParagraph}
+                  />
+                )}
+              </Mutation>
+            ))}
+          </div>
 
           <Mutation mutation={NEW_PARAGRAPH}>
             {(createParagraph, { loading }) => (
@@ -140,8 +147,12 @@ class ArticleDetail extends Component {
         </section>
 
         <style jsx>{`
-          .paragraphs {
+          .paragraph-panel {
             background: ${blueGrey[50]};
+          }
+
+          .paragraphs {
+            padding: 16px;
           }
         `}</style>
       </SplitLayout>

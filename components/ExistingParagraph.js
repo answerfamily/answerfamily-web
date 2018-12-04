@@ -1,6 +1,10 @@
 import { Component, Fragment } from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
 import RequireLogin from './RequireLogin';
@@ -259,18 +263,25 @@ class ExistingParagraph extends Component {
     const { paragraph } = this.props;
     const { tab } = this.state;
     return (
-      <div>
-        <RequireLogin>
-          {({ me }) =>
-            me &&
-            paragraph.canEdit && (
-              <button type="button" onClick={this.handleDelete}>
-                Delete
-              </button>
-            )
-          }
-        </RequireLogin>
-        {paragraph.text}
+      <Card style={{ marginBottom: 8 }}>
+        <header>
+          <Typography color="secondary" style={{ marginRight: 'auto' }}>
+            原句
+          </Typography>
+          <RequireLogin>
+            {({ me }) =>
+              me &&
+              paragraph.canDelete && (
+                <DeleteIcon
+                  color="secondary"
+                  size="small"
+                  onClick={this.handleDelete}
+                />
+              )
+            }
+          </RequireLogin>
+        </header>
+        <Typography color="textSecondary">{paragraph.text}</Typography>
         <hr />
         現有回應
         <ul>
@@ -302,7 +313,13 @@ class ExistingParagraph extends Component {
             );
           }}
         </RequireLogin>
-      </div>
+        <style jsx>{`
+          header {
+            display: flex;
+            padding: 4px;
+          }
+        `}</style>
+      </Card>
     );
   }
 }
