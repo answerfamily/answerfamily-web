@@ -6,9 +6,9 @@ import { withTheme } from '@material-ui/core/styles';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import AppBar from '../components/AppBar';
-import ParagraphList from '../components/ParagraphList';
-import ParagraphReplyList from '../components/ParagraphReplyList';
+import AppBar from '../components/common/AppBar';
+import ParagraphList from '../components/index/ParagraphList';
+import ParagraphReplyList from '../components/index/ParagraphReplyList';
 
 const SET_SEARCH_TEXT = gql`
   mutation($text: String!) {

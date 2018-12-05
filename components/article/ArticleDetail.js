@@ -4,10 +4,10 @@ import { produce } from 'immer';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 
-import NewParagraph from '../components/NewParagraph';
-import ExistingParagraph from '../components/ExistingParagraph';
-import SourcesForm from '../components/SourcesForm';
-import SplitLayout from './SplitLayout';
+import NewParagraph from './NewParagraph';
+import ExistingParagraph from './ExistingParagraph';
+import SourcesForm from '../SourcesForm';
+import SplitLayout from '../common/SplitLayout';
 
 const articleFragment = gql`
   fragment articleDetail on Article {

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Link } from '../routes';
+import { Link } from '../../routes';
 
 const LIST_PARAGRAPHS = gql`
   {

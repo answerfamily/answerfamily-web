@@ -7,7 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
-import RequireLogin from './RequireLogin';
+import RequireLogin from '../common/RequireLogin';
 
 const paragraphFragment = gql`
   fragment articleDetailParagraph on Paragraph {

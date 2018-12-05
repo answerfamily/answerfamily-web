@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import RequireLogin from './RequireLogin';
-import SplitLayout from './SplitLayout';
+import RequireLogin from '../common/RequireLogin';
+import SplitLayout from '../common/SplitLayout';
 import RelatedParagraphList from './RelatedParagraphList';
 
 class ParagraphSearch extends Component {

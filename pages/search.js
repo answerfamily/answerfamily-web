@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 import { Mutation, Query } from 'react-apollo';
 
-import ParagraphSearch from '../components/ParagraphSearch';
-import Redirect from '../components/Redirect';
+import ParagraphSearch from '../components/search/ParagraphSearch';
+import Redirect from '../components/common/Redirect';
 
 export const CREATE_ARTCILE = gql`
   mutation($article: ArticleInput) {

@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import ArticleDetail from '../components/ArticleDetail';
+import ArticleDetail from '../components/article/ArticleDetail';
 
 export const GET_ARTICLE = gql`
   query($id: String!) {

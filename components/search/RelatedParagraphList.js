@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { Link } from '../routes';
+import { Link } from '../../routes';
 import Card from '@material-ui/core/Card';
 
 const LIST_RELATED_PARAGRAPHS = gql`

@@ -1,7 +1,7 @@
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { authorize, logout } from '../lib/auth0';
-import { dehydrate, setLoginRedirect } from '../lib/auth';
+import { authorize, logout } from '../../lib/auth0';
+import { dehydrate, setLoginRedirect } from '../../lib/auth';
 
 const ME = gql`
   {
