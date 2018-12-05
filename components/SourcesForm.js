@@ -41,6 +41,7 @@ class SourcesForm extends Component {
   static fragments = {
     sources: gql`
       fragment articleSource on ArticleSource {
+        id
         note
         url
         createdAt

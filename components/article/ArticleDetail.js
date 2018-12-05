@@ -17,10 +17,10 @@ const articleFragment = gql`
       ...articleDetailParagraph
     }
     sources {
-      url
-      note
+      ...articleSource
     }
   }
+  ${SourcesForm.fragments.sources}
   ${ExistingParagraph.fragments.paragraph}
 `;
 
@@ -93,6 +93,24 @@ class NewParagraphEditor extends Component {
   }
 }
 
+const NEW_SOURCE = gql`
+  mutation($articleId: String!, $source: ArticleSourceInput!) {
+    addSourceToArticle(articleId: $articleId, source: $source) {
+      ...articleDetail
+    }
+  }
+  ${articleFragment}
+`;
+
+const DELETE_SOURCE = gql`
+  mutation($sourceId: ObjectId!) {
+    deleteSource(sourceId: $sourceId) {
+      ...articleDetail
+    }
+  }
+  ${articleFragment}
+`;
+
 class ArticleDetail extends Component {
   static defaultProps = {
     createArticle() {},
@@ -102,14 +120,6 @@ class ArticleDetail extends Component {
     article: articleFragment,
   };
 
-  handleParagraphDelete = idx => {
-    this.setState(
-      produce(({ paragraphs }) => {
-        paragraphs.splice(idx, 1);
-      })
-    );
-  };
-
   render() {
     const { article } = this.props;
     const paragraphs = article.paragraphs;
@@ -117,7 +127,26 @@ class ArticleDetail extends Component {
     return (
       <SplitLayout>
         <section className="article">
-          <SourcesForm sources={article.sources} />
+          <Mutation mutation={NEW_SOURCE}>
+            {addSource => (
+              <Mutation mutation={DELETE_SOURCE}>
+                {deleteSource => (
+                  <SourcesForm
+                    sources={article.sources}
+                    onAdd={source =>
+                      addSource({
+                        variables: { source, articleId: article.id },
+                      })
+                    }
+                    onDelete={idx => {
+                      const sourceId = article.sources[idx].id;
+                      deleteSource({ variables: { sourceId } });
+                    }}
+                  />
+                )}
+              </Mutation>
+            )}
+          </Mutation>
           {article.text}
         </section>
         <section className="paragraph-panel">
