@@ -15,12 +15,13 @@ function SplitLayout({ children }) {
         .layout {
           height: 100vh;
           display: flex;
-          flex-direction: column;
+          flex-flow: column;
         }
 
         .container {
           display: flex;
           flex: 1;
+          flex-flow: column;
         }
 
         @media (min-aspect-ratio: 1/1) {
