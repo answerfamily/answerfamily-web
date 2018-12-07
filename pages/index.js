@@ -7,7 +7,7 @@ import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import AppBar from '../components/common/AppBar';
-import ParagraphList from '../components/index/ParagraphList';
+import ArticleList from '../components/index/ArticleList';
 import ParagraphReplyList from '../components/index/ParagraphReplyList';
 
 const SET_SEARCH_TEXT = gql`
@@ -63,11 +63,11 @@ class Index extends Component {
           </Mutation>
         </header>
         <Tabs onChange={this.handleTabChange} value={tab}>
-          <Tab label="Paragraph Reply" />
-          <Tab label="Paragraphs" />
+          <Tab label="最新的對話" />
+          <Tab label="愛家訊息集錦" />
         </Tabs>
         {tab === 0 && <ParagraphReplyList />}
-        {tab === 1 && <ParagraphList />}
+        {tab === 1 && <ArticleList />}
 
         <style jsx>{`
           .jumbotron {
