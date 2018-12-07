@@ -9,6 +9,7 @@ import gql from 'graphql-tag';
 import AppBar from '../components/common/AppBar';
 import ArticleList from '../components/index/ArticleList';
 import ParagraphReplyList from '../components/index/ParagraphReplyList';
+import ReplyList from '../components/index/ReplyList';
 
 const SET_SEARCH_TEXT = gql`
   mutation($text: String!) {
@@ -39,7 +40,7 @@ class ArticleSearchForm extends Component {
 
 class Index extends Component {
   state = {
-    tab: 0,
+    tab: 1,
   };
 
   handleTabChange = (e, tab) => {
@@ -63,11 +64,13 @@ class Index extends Component {
           </Mutation>
         </header>
         <Tabs onChange={this.handleTabChange} value={tab}>
-          <Tab label="最新的對話" />
           <Tab label="愛家訊息集錦" />
+          <Tab label="最新的對話" />
+          <Tab label="回應列表" />
         </Tabs>
-        {tab === 0 && <ParagraphReplyList />}
-        {tab === 1 && <ArticleList />}
+        {tab === 0 && <ArticleList />}
+        {tab === 1 && <ParagraphReplyList />}
+        {tab === 2 && <ReplyList />}
 
         <style jsx>{`
           .jumbotron {
