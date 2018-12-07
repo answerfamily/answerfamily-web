@@ -6,7 +6,7 @@ import { Mutation } from 'react-apollo';
 
 import NewParagraph from './NewParagraph';
 import ExistingParagraph from './ExistingParagraph';
-import SourcesForm from '../SourcesForm';
+import SourcesForm from './SourcesForm';
 import SplitLayout from '../common/SplitLayout';
 
 const articleFragment = gql`
