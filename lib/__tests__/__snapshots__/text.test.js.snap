@@ -100,6 +100,40 @@ Array [
 ]
 `;
 
+exports[`mark marks specified text 1`] = `
+Array [
+  "
+        下學期國中教科書教性解放
+        1.",
+  <mark>
+    國中如何性滿足
+  </mark>,
+  "
+        2.如何",
+  <mark>
+    性愛自拍
+  </mark>,
+  "
+        3.",
+  <mark>
+    鼓勵統計性伴侶人數
+  </mark>,
+  "
+        4.",
+  <mark>
+    介紹師生戀
+  </mark>,
+  "
+        5.",
+  <mark>
+    介紹人動物戀/交合
+  </mark>,
+  "！
+        您看了除了生氣還能做甚麼？
+      ",
+]
+`;
+
 exports[`nl2br inserts <br> on line breaks in strings, with ending <br>s trimmed 1`] = `
 Array [
   "Foo",
