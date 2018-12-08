@@ -9,6 +9,8 @@ import ExistingParagraph from './ExistingParagraph';
 import SourcesForm from './SourcesForm';
 import SplitLayout from '../common/SplitLayout';
 
+import { mark, nl2br, linkify } from '../../lib/text';
+
 const articleFragment = gql`
   fragment articleDetail on Article {
     id
@@ -116,13 +118,44 @@ class ArticleDetail extends Component {
     createArticle() {},
   };
 
+  state = {
+    searchedText: '',
+  };
+
   static fragments = {
     article: articleFragment,
   };
 
+  getMarkProps = string => {
+    const { searchedText } = this.state;
+
+    return {
+      className:
+        searchedText && string.includes(searchedText) ? 'is-active' : '',
+      onClick: this.handleHighlightClick,
+    };
+  };
+
+  handleHighlightClick = e => {
+    this.setState({
+      searchedText: e.target.innerText,
+    });
+  };
+
+  handleTextSearch = e => {
+    this.setState({
+      searchedText: e.target.value,
+    });
+  };
+
   render() {
+    const { searchedText } = this.state;
     const { article } = this.props;
     const paragraphs = article.paragraphs;
+    const paragraphText = paragraphs.map(p => p.text);
+    const filteredParagraphs = paragraphs.filter(p =>
+      p.text.includes(searchedText)
+    );
 
     return (
       <SplitLayout>
@@ -147,11 +180,26 @@ class ArticleDetail extends Component {
               </Mutation>
             )}
           </Mutation>
-          {article.text}
+          <article>
+            {nl2br(
+              linkify(
+                mark(article.text, {
+                  stringsToMatch: paragraphText,
+                  getProps: this.getMarkProps,
+                })
+              )
+            )}
+          </article>
         </section>
         <section className="paragraph-panel">
+          <input
+            type="search"
+            value={searchedText}
+            onChange={this.handleTextSearch}
+          />
+
           <div className="paragraphs">
-            {paragraphs.map(paragraph => (
+            {filteredParagraphs.map(paragraph => (
               <Mutation key={paragraph.id} mutation={DELETE_PARAGRAPH}>
                 {(deleteParagraph, { loading }) => (
                   <ExistingParagraph
@@ -182,6 +230,10 @@ class ArticleDetail extends Component {
 
           .paragraphs {
             padding: 16px;
+          }
+
+          article :global(mark.is-active) {
+            background: orange;
           }
         `}</style>
       </SplitLayout>
