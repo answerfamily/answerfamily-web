@@ -8,7 +8,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
 import RequireLogin from '../common/RequireLogin';
-import { nl2br, mark } from '../../lib/text';
+import { nl2br, mark, linkify } from '../../lib/text';
 
 const paragraphFragment = gql`
   fragment articleDetailParagraph on Paragraph {
@@ -148,7 +148,7 @@ function ReplyList({ paragraphId = '', replies = [] }) {
     <ul>
       {replies.map(reply => (
         <li key={reply.id}>
-          {reply.text}{' '}
+          {nl2br(linkify(reply.text))}
           <ConnectReplyButton replyId={reply.id} paragraphId={paragraphId} />
         </li>
       ))}
@@ -297,7 +297,7 @@ class ExistingParagraph extends Component {
         <ul>
           {paragraph.paragraphReplies.map(({ reply }) => (
             <li key={reply.id}>
-              {reply.text} ({reply.note})
+              {nl2br(linkify(reply.text))} ({reply.note})
             </li>
           ))}
         </ul>
