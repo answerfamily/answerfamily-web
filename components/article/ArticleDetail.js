@@ -126,16 +126,6 @@ class ArticleDetail extends Component {
     article: articleFragment,
   };
 
-  getMarkProps = string => {
-    const { searchedText } = this.state;
-
-    return {
-      className:
-        searchedText && string.includes(searchedText) ? 'is-active' : '',
-      onClick: this.handleHighlightClick,
-    };
-  };
-
   handleHighlightClick = e => {
     this.setState({
       searchedText: e.target.innerText,
@@ -152,7 +142,7 @@ class ArticleDetail extends Component {
     const { searchedText } = this.state;
     const { article } = this.props;
     const paragraphs = article.paragraphs;
-    const paragraphText = paragraphs.map(p => p.text);
+    const paragraphTexts = paragraphs.map(p => p.text);
     const filteredParagraphs = paragraphs.filter(p =>
       p.text.includes(searchedText)
     );
@@ -183,10 +173,20 @@ class ArticleDetail extends Component {
           <article>
             {nl2br(
               linkify(
-                mark(article.text, {
-                  stringsToMatch: paragraphText,
-                  getProps: this.getMarkProps,
-                })
+                mark(
+                  mark(article.text, {
+                    stringsToMatch: paragraphTexts,
+                    props: {
+                      onClick: this.handleHighlightClick,
+                    },
+                  }),
+                  {
+                    stringsToMatch: [searchedText],
+                    props: {
+                      className: 'is-active',
+                    },
+                  }
+                )
               )
             )}
           </article>
