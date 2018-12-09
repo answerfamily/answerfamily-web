@@ -183,7 +183,7 @@ class ArticleDetail extends Component {
                   {
                     stringsToMatch: [searchedText],
                     props: {
-                      className: 'is-active',
+                      className: 'is-searched',
                     },
                   }
                 )
@@ -206,6 +206,7 @@ class ArticleDetail extends Component {
                     paragraph={paragraph}
                     loading={loading}
                     deleteParagraph={deleteParagraph}
+                    highlightedText={searchedText}
                   />
                 )}
               </Mutation>
@@ -232,7 +233,7 @@ class ArticleDetail extends Component {
             padding: 16px;
           }
 
-          article :global(mark.is-active) {
+          article :global(mark.is-searched) {
             background: orange;
           }
         `}</style>

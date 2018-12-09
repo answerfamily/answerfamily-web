@@ -8,6 +8,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
 import RequireLogin from '../common/RequireLogin';
+import { nl2br, mark } from '../../lib/text';
 
 const paragraphFragment = gql`
   fragment articleDetailParagraph on Paragraph {
@@ -239,6 +240,7 @@ class ExistingReplyForm extends Component {
 class ExistingParagraph extends Component {
   static defaultProps = {
     paragraph: null, // should be an object
+    highlightedText: '',
     onDelete() {},
   };
 
@@ -260,7 +262,7 @@ class ExistingParagraph extends Component {
   };
 
   render() {
-    const { paragraph } = this.props;
+    const { paragraph, highlightedText } = this.props;
     const { tab } = this.state;
     return (
       <Card style={{ marginBottom: 8 }}>
@@ -281,7 +283,15 @@ class ExistingParagraph extends Component {
             }
           </RequireLogin>
         </header>
-        <Typography color="textSecondary">{paragraph.text}</Typography>
+        <article className="paragraph">
+          <Typography color="textSecondary">
+            {nl2br(
+              mark(paragraph.text, {
+                stringsToMatch: [highlightedText],
+              })
+            )}
+          </Typography>
+        </article>
         <hr />
         現有回應
         <ul>
@@ -317,6 +327,9 @@ class ExistingParagraph extends Component {
           header {
             display: flex;
             padding: 4px;
+          }
+          .paragraph :global(mark) {
+            background: orange;
           }
         `}</style>
       </Card>
