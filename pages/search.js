@@ -1,6 +1,8 @@
 import gql from 'graphql-tag';
 import { Mutation, Query } from 'react-apollo';
 
+import cofactsClient from '../lib/cofactsClient';
+
 import ParagraphSearch from '../components/search/ParagraphSearch';
 import Redirect from '../components/common/Redirect';
 
@@ -18,6 +20,57 @@ const PARAGRAPH_SEARCH = gql`
   }
 `;
 
+const LOAD_COFACTS_ARTICLE = gql`
+  query($id: String!) {
+    GetArticle(id: $id) {
+      text
+    }
+  }
+`;
+
+function ParagraphSearchDataContainer({ children }) {
+  return (
+    <Query query={PARAGRAPH_SEARCH}>
+      {({ data, error }) => {
+        if (error) {
+          return <p>{error}</p>;
+        }
+
+        // Cofacts integration:
+        // If only cofacts article ID is found, extract its content via Cofacts API
+        //
+        const cofactsArticleIDMatches = data.searchedText.match(
+          /^https:\/\/cofacts.g0v.tw\/article\/(.+)$/
+        );
+        if (cofactsArticleIDMatches) {
+          const articleId = cofactsArticleIDMatches[1];
+          return (
+            <Query
+              query={LOAD_COFACTS_ARTICLE}
+              variables={{ id: articleId }}
+              client={cofactsClient}
+            >
+              {({ data, error, loading }) => {
+                if (loading) {
+                  return <p>展開 Cofacts 文章中⋯⋯</p>;
+                }
+
+                if (error) {
+                  return <p>Error fetching Cofacts</p>;
+                }
+
+                return children({ text: data.GetArticle.text });
+              }}
+            </Query>
+          );
+        }
+
+        return children({ text: data.searchedText });
+      }}
+    </Query>
+  );
+}
+
 function SearchPage() {
   return (
     <Mutation mutation={CREATE_ARTCILE}>
@@ -32,22 +85,15 @@ function SearchPage() {
           return <p>Error: {error}</p>;
         }
         return (
-          <Query query={PARAGRAPH_SEARCH}>
-            {({ data, error }) => {
-              if (error) {
-                return <p>{error}</p>;
-              }
-              return (
-                <ParagraphSearch
-                  text={data.searchedText}
-                  loading={loading}
-                  onSubmit={article =>
-                    createArticle({ variables: { article } })
-                  }
-                />
-              );
-            }}
-          </Query>
+          <ParagraphSearchDataContainer>
+            {({ text }) => (
+              <ParagraphSearch
+                text={text}
+                loading={loading}
+                onSubmit={article => createArticle({ variables: { article } })}
+              />
+            )}
+          </ParagraphSearchDataContainer>
         );
       }}
     </Mutation>
