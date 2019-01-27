@@ -1,42 +1,13 @@
 import { Component } from 'react';
-import Router from 'next/router';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withTheme } from '@material-ui/core/styles';
-import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import AppBar from '../components/common/AppBar';
+import ArticleSearchForm from '../components/index/ArticleSearchForm';
 import ArticleList from '../components/index/ArticleList';
 import ParagraphReplyList from '../components/index/ParagraphReplyList';
 import ReplyList from '../components/index/ReplyList';
-
-const SET_SEARCH_TEXT = gql`
-  mutation($text: String!) {
-    setSearchedText(text: $text) @client
-  }
-`;
-
-class ArticleSearchForm extends Component {
-  static defaultProps = {
-    onSubmit() {},
-  };
-
-  handleSearch = e => {
-    e.preventDefault();
-    this.props.onSubmit(e.target.searchedText.value);
-    Router.push('/search');
-  };
-
-  render() {
-    return (
-      <form onSubmit={this.handleSearch}>
-        <textarea name="searchedText" />
-        <button type="submit">看說法</button>
-      </form>
-    );
-  }
-}
 
 class Index extends Component {
   state = {
@@ -55,13 +26,7 @@ class Index extends Component {
       <div>
         <AppBar position="fixed" />
         <header className="jumbotron">
-          <Mutation mutation={SET_SEARCH_TEXT}>
-            {search => (
-              <ArticleSearchForm
-                onSubmit={text => search({ variables: { text } })}
-              />
-            )}
-          </Mutation>
+          <ArticleSearchForm />
         </header>
         <Tabs onChange={this.handleTabChange} value={tab}>
           <Tab label="愛家訊息集錦" />
