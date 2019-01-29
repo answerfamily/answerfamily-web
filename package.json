@@ -26,7 +26,8 @@
     "react": "^16.6.3",
     "react-apollo": "^2.1.11",
     "react-dom": "^16.6.3",
-    "react-jss": "^8.6.1"
+    "react-jss": "^8.6.1",
+    "url-regex": "^4.1.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
