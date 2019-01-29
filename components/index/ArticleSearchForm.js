@@ -3,13 +3,15 @@ import { Router } from '../../routes';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { getSearchUrl } from '../../lib/searchUtil';
+import cofactsClient from '../../lib/cofactsClient';
 
-const SEARCH_STRING_MAX_LEN = 1000;
+// import { getSearchUrl } from '../../lib/searchUtil';
 
-const SET_SEARCH_TEXT = gql`
-  mutation($text: String!) {
-    setSearchedText(text: $text) @client
+// const SEARCH_STRING_MAX_LEN = 1000;
+
+const SET_SEARCH_DATA = gql`
+  mutation($data: SearchDataInput) {
+    setSearchedData(data: $data) @client
   }
 `;
 
@@ -18,19 +20,23 @@ const SET_SEARCH_TEXT = gql`
  */
 class ArticleSearchForm extends Component {
   static defaultProps = {
-    saveSearchedText() {},
+    saveSearchedData() {},
+  };
+
+  state = {
+    isCheckingUrl: false,
   };
 
   handleSearch = e => {
     e.preventDefault();
     const searchString = e.target.searchedText.value;
 
-    if (searchString.length <= SEARCH_STRING_MAX_LEN) {
-      Router.pushRoute(getSearchUrl(searchString));
-    } else {
-      this.props.saveSearchedText(searchString);
-      Router.pushRoute('/search');
-    }
+    // if (searchString.length <= SEARCH_STRING_MAX_LEN) {
+    //   Router.pushRoute(getSearchUrl(searchString));
+    // } else {
+    this.props.saveSearchedData({ text: searchString });
+    Router.pushRoute('/search');
+    // }
   };
 
   render() {
@@ -45,10 +51,10 @@ class ArticleSearchForm extends Component {
 
 function ArticleSearchFormContainer() {
   return (
-    <Mutation mutation={SET_SEARCH_TEXT}>
+    <Mutation mutation={SET_SEARCH_DATA}>
       {search => (
         <ArticleSearchForm
-          saveSearchedText={text => search({ variables: { text } })}
+          saveSearchedData={data => search({ variables: { data } })}
         />
       )}
     </Mutation>

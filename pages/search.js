@@ -14,9 +14,13 @@ export const CREATE_ARTCILE = gql`
   }
 `;
 
-const PARAGRAPH_SEARCH = gql`
+const SEARCHED_DATA = gql`
   {
-    searchedText @client
+    searchedData @client {
+      text
+      sourceText
+      sourceUrl
+    }
   }
 `;
 
@@ -30,42 +34,44 @@ const LOAD_COFACTS_ARTICLE = gql`
 
 function ParagraphSearchDataContainer({ children }) {
   return (
-    <Query query={PARAGRAPH_SEARCH}>
+    <Query query={SEARCHED_DATA}>
       {({ data, error }) => {
         if (error) {
           return <p>{error}</p>;
         }
 
-        // Cofacts integration:
-        // If only cofacts article ID is found, extract its content via Cofacts API
-        //
-        const cofactsArticleIDMatches = data.searchedText.match(
-          /^https:\/\/cofacts.g0v.tw\/article\/(.+)$/
-        );
-        if (cofactsArticleIDMatches) {
-          const articleId = cofactsArticleIDMatches[1];
-          return (
-            <Query
-              query={LOAD_COFACTS_ARTICLE}
-              variables={{ id: articleId }}
-              client={cofactsClient}
-            >
-              {({ data, error, loading }) => {
-                if (loading) {
-                  return <p>展開 Cofacts 文章中⋯⋯</p>;
-                }
+        // // Cofacts integration:
+        // // If only cofacts article ID is found, extract its content via Cofacts API
+        // //
+        // const cofactsArticleIDMatches = data.searchedText.match(
+        //   /^https:\/\/cofacts.g0v.tw\/article\/(.+)$/
+        // );
+        // if (cofactsArticleIDMatches) {
+        //   const articleId = cofactsArticleIDMatches[1];
+        //   return (
+        //     <Query
+        //       query={LOAD_COFACTS_ARTICLE}
+        //       variables={{ id: articleId }}
+        //       client={cofactsClient}
+        //     >
+        //       {({ data, error, loading }) => {
+        //         if (loading) {
+        //           return <p>展開 Cofacts 文章中⋯⋯</p>;
+        //         }
 
-                if (error) {
-                  return <p>Error fetching Cofacts</p>;
-                }
+        //         if (error) {
+        //           return <p>Error fetching Cofacts</p>;
+        //         }
 
-                return children({ text: data.GetArticle.text });
-              }}
-            </Query>
-          );
-        }
+        //         return children({ text: data.GetArticle.text });
+        //       }}
+        //     </Query>
+        //   );
+        // }
 
-        return children({ text: data.searchedText });
+        return children({
+          text: data.searchedData ? data.searchedData.text : '',
+        });
       }}
     </Query>
   );
