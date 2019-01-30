@@ -169,6 +169,9 @@ class ArticleDetail extends Component {
   render() {
     const { searchedText, hyperlinkInDialog } = this.state;
     const { article } = this.props;
+
+    if (!article) return <div>No such article</div>; // No such article
+
     const paragraphs = article.paragraphs;
     const paragraphTexts = paragraphs.map(p => p.text);
     const filteredParagraphs = paragraphs.filter(p =>
