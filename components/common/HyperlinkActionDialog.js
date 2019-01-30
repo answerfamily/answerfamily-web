@@ -32,7 +32,7 @@ class HyperlinkActionDialog extends PureComponent {
     const { summary, url, title, saveSearchedData } = this.props;
 
     saveSearchedData({
-      text: summary,
+      text: `${title}\n\n${summary}`,
       sourceText: title,
       sourceUrl: url,
     });
@@ -81,6 +81,13 @@ class HyperlinkActionDialog extends PureComponent {
               >
                 <ListItemText
                   primary={article.text}
+                  primaryTypographyProps={{
+                    style: {
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    },
+                  }}
                   secondary={`${article.paragraphs.length} 則段落`}
                 />
               </ListItem>
