@@ -89,7 +89,7 @@ class SourcesForm extends Component {
               <input type="text" name="note" />
             </label>
 
-            <button type="submit">新增文章來源</button>
+            <button type="submit">新增出處</button>
           </form>
         )}
       </section>

@@ -1,16 +1,9 @@
+import React from 'react';
 import gql from 'graphql-tag';
-import { Mutation, Query } from 'react-apollo';
+import { Query } from 'react-apollo';
 
 import ParagraphSearch from '../components/search/ParagraphSearch';
-import Redirect from '../components/common/Redirect';
-
-export const CREATE_ARTCILE = gql`
-  mutation($article: ArticleInput) {
-    createArticle(article: $article) {
-      id
-    }
-  }
-`;
+import Router from 'next/router';
 
 const SEARCHED_DATA = gql`
   {
@@ -22,49 +15,30 @@ const SEARCHED_DATA = gql`
   }
 `;
 
-function ParagraphSearchDataContainer({ children }) {
-  return (
-    <Query query={SEARCHED_DATA}>
-      {({ data, error }) => {
-        if (error) {
-          return <p>{error}</p>;
-        }
+class SearchPage extends React.Component {
+  handleArticleSubmit = () => {
+    Router.push('/submit-article');
+  };
 
-        return children({
-          text: data.searchedData ? data.searchedData.text : '',
-        });
-      }}
-    </Query>
-  );
-}
+  render() {
+    return (
+      <Query query={SEARCHED_DATA}>
+        {({ data, error, loading }) => {
+          if (error) {
+            return <p>{error}</p>;
+          }
 
-function SearchPage() {
-  return (
-    <Mutation mutation={CREATE_ARTCILE}>
-      {(createArticle, { data, called, loading, error }) => {
-        if (loading) {
-          return <p>Loading...</p>;
-        }
-        if (called && data) {
-          return <Redirect to={`/article/${data.createArticle.id}`} />;
-        }
-        if (error) {
-          return <p>Error: {error}</p>;
-        }
-        return (
-          <ParagraphSearchDataContainer>
-            {({ text }) => (
-              <ParagraphSearch
-                text={text}
-                loading={loading}
-                onSubmit={article => createArticle({ variables: { article } })}
-              />
-            )}
-          </ParagraphSearchDataContainer>
-        );
-      }}
-    </Mutation>
-  );
+          return (
+            <ParagraphSearch
+              text={data.searchedData ? data.searchedData.text : ''}
+              loading={loading}
+              onSubmit={this.handleArticleSubmit}
+            />
+          );
+        }}
+      </Query>
+    );
+  }
 }
 
 export default SearchPage;
