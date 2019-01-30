@@ -146,15 +146,15 @@ class ArticleDetail extends Component {
   };
 
   handleUrlClick = e => {
-    e.preventDefault();
     const targetHref = e.target.href;
     if (!targetHref) return;
 
     const hyperlink = this.props.article.hyperlinks.find(
-      ({ url }) => url === targetHref
+      hyperlink => hyperlink && hyperlink.url === targetHref
     );
     if (!hyperlink) return;
 
+    e.preventDefault();
     this.setState({
       hyperlinkInDialog: hyperlink,
     });
