@@ -9,6 +9,7 @@ import ExistingParagraph from './ExistingParagraph';
 import SourcesForm from './SourcesForm';
 import Hyperlink from './Hyperlink';
 import SplitLayout from '../common/SplitLayout';
+import HyperlinkActionDialog from '../common/HyperlinkActionDialog';
 
 import { mark, nl2br, linkify } from '../../lib/text';
 
@@ -125,6 +126,7 @@ class ArticleDetail extends Component {
 
   state = {
     searchedText: '',
+    hyperlinkInDialog: null,
   };
 
   static fragments = {
@@ -143,8 +145,29 @@ class ArticleDetail extends Component {
     });
   };
 
+  handleUrlClick = e => {
+    e.preventDefault();
+    const targetHref = e.target.href;
+    if (!targetHref) return;
+
+    const hyperlink = this.props.article.hyperlinks.find(
+      ({ url }) => url === targetHref
+    );
+    if (!hyperlink) return;
+
+    this.setState({
+      hyperlinkInDialog: hyperlink,
+    });
+  };
+
+  handleUrlDialogClose = () => {
+    this.setState({
+      hyperlinkInDialog: null,
+    });
+  };
+
   render() {
-    const { searchedText } = this.state;
+    const { searchedText, hyperlinkInDialog } = this.state;
     const { article } = this.props;
     const paragraphs = article.paragraphs;
     const paragraphTexts = paragraphs.map(p => p.text);
@@ -154,6 +177,16 @@ class ArticleDetail extends Component {
 
     return (
       <SplitLayout>
+        {hyperlinkInDialog && (
+          <HyperlinkActionDialog
+            title={hyperlinkInDialog.title}
+            url={hyperlinkInDialog.url}
+            summary={hyperlinkInDialog.summary}
+            articleSources={hyperlinkInDialog.articleSources}
+            open
+            onClose={this.handleUrlDialogClose}
+          />
+        )}
         <section className="article">
           <Mutation mutation={NEW_SOURCE}>
             {addSource => (
@@ -191,7 +224,8 @@ class ArticleDetail extends Component {
                       className: 'is-searched',
                     },
                   }
-                )
+                ),
+                { props: { onClick: this.handleUrlClick } }
               )
             )}
           </article>
