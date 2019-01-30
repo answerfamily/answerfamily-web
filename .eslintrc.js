@@ -25,7 +25,8 @@ module.exports = {
     'prettier/prettier': ['error', {
       trailingComma: 'es5',
       singleQuote: true,
-    }]
+    }],
+    'no-unused-vars': ['error', { ignoreRestSiblings: true }],
   },
   settings: {
     react: {

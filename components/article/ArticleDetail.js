@@ -200,7 +200,11 @@ class ArticleDetail extends Component {
               {article.hyperlinks
                 .filter(h => h)
                 .map((hyperlink, idx) => (
-                  <Hyperlink key={idx} hyperlink={hyperlink} />
+                  <Hyperlink
+                    key={idx}
+                    hyperlink={hyperlink}
+                    showDialogOnClick
+                  />
                 ))}
             </footer>
           )}
