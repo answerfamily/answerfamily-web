@@ -7,6 +7,7 @@ import { Mutation } from 'react-apollo';
 import NewParagraph from './NewParagraph';
 import ExistingParagraph from './ExistingParagraph';
 import SourcesForm from './SourcesForm';
+import Hyperlink from './Hyperlink';
 import SplitLayout from '../common/SplitLayout';
 
 import { mark, nl2br, linkify } from '../../lib/text';
@@ -15,6 +16,9 @@ const articleFragment = gql`
   fragment articleDetail on Article {
     id
     text
+    hyperlinks {
+      ...hyperlink
+    }
     paragraphs {
       ...articleDetailParagraph
     }
@@ -24,6 +28,7 @@ const articleFragment = gql`
   }
   ${SourcesForm.fragments.sources}
   ${ExistingParagraph.fragments.paragraph}
+  ${Hyperlink.fragments.hyperlink}
 `;
 
 const NEW_PARAGRAPH = gql`
@@ -190,6 +195,15 @@ class ArticleDetail extends Component {
               )
             )}
           </article>
+          {article.hyperlinks.length > 0 && (
+            <footer className="hyperlinks">
+              {article.hyperlinks
+                .filter(h => h)
+                .map((hyperlink, idx) => (
+                  <Hyperlink key={idx} hyperlink={hyperlink} />
+                ))}
+            </footer>
+          )}
         </section>
         <section className="paragraph-panel">
           <input
@@ -225,6 +239,11 @@ class ArticleDetail extends Component {
         </section>
 
         <style jsx>{`
+          .hyperlinks {
+            display: flex;
+            flex-flow: row wrap;
+          }
+
           .paragraph-panel {
             background: ${blueGrey[50]};
           }
