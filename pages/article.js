@@ -30,7 +30,7 @@ class ArticlePage extends Component {
           }
 
           if (error) {
-            return <p>Error: {error}</p>;
+            return <p>Error: {error.toString()}</p>;
           }
 
           return <ArticleDetail article={data.article} />;

@@ -138,7 +138,7 @@ function SubmitArticlePage() {
                 return <Redirect to={`/article/${data.createArticle.id}`} />;
               }
               if (error) {
-                return <p>Error: {error}</p>;
+                return <p>Error: {error.toString()}</p>;
               }
               return (
                 <ParagraphSearchDataContainer>
