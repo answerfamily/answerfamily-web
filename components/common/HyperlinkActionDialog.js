@@ -25,7 +25,6 @@ class HyperlinkActionDialog extends PureComponent {
     summary: '',
     url: '',
     articleSources: [],
-    saveSearchedData() {},
   };
 
   handleSearch = () => {
