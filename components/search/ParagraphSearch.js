@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import RequireLogin from '../common/RequireLogin';
-import SplitLayout from '../common/SplitLayout';
 import RelatedParagraphList from './RelatedParagraphList';
 
 class ParagraphSearch extends Component {
@@ -20,7 +19,7 @@ class ParagraphSearch extends Component {
     const { text } = this.props;
 
     return (
-      <SplitLayout>
+      <div className="container">
         <section className="article">{text}</section>
         <section className="paragraphs">
           <RelatedParagraphList inText={text} />
@@ -49,6 +48,12 @@ class ParagraphSearch extends Component {
         </section>
 
         <style jsx>{`
+          .container {
+            flex: 1;
+            display: flex;
+            flex-flow: column;
+          }
+
           .paragraphs {
             background: ${blueGrey[50]};
           }
@@ -58,7 +63,7 @@ class ParagraphSearch extends Component {
             flex-flow: column;
           }
         `}</style>
-      </SplitLayout>
+      </div>
     );
   }
 }
