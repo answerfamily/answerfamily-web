@@ -8,13 +8,20 @@ import Layout from '../components/common/Layout';
 import { SEARCHED_DATA } from '../components/common/ArticleSearchForm';
 import ParagraphSearch from '../components/search/ParagraphSearch';
 import Router from 'next/router';
+import AppBarTabs from '../components/search/AppBarTab';
 
 class SearchPage extends React.Component {
+  state = {
+    currentTab: 'articles',
+  };
+
   handleArticleSubmit = () => {
     Router.push('/submit-article');
   };
 
   render() {
+    const { currentTab } = this.props;
+
     return (
       <Query query={SEARCHED_DATA}>
         {({ data, error, loading }) => {
@@ -32,6 +39,7 @@ class SearchPage extends React.Component {
           return (
             <Layout>
               <AppBar>
+                <AppBarTabs value={currentTab} />
                 <AppBarSearchForm text={searchedText} />
               </AppBar>
 
