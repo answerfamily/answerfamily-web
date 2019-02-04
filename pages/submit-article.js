@@ -5,22 +5,13 @@ import { Mutation, Query } from 'react-apollo';
 import RequireLogin from '../components/common/RequireLogin';
 import Redirect from '../components/common/Redirect';
 import AppBar from '../components/common/AppBar';
+import { SEARCHED_DATA } from '../components/common/ArticleSearchForm';
 import SourcesForm from '../components/article/SourcesForm';
 
 export const CREATE_ARTCILE = gql`
   mutation($article: ArticleInput) {
     createArticle(article: $article) {
       id
-    }
-  }
-`;
-
-const SEARCHED_DATA = gql`
-  {
-    searchedData @client {
-      text
-      sourceText
-      sourceUrl
     }
   }
 `;

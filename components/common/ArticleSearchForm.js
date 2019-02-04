@@ -1,12 +1,22 @@
 import { Component } from 'react';
 import { Router } from '../../routes';
-import { Mutation, ApolloConsumer } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
 import urlRegex from 'url-regex';
 import gql from 'graphql-tag';
 
-import HyperlinkActionDialog from '../common/HyperlinkActionDialog';
+import HyperlinkActionDialog from './HyperlinkActionDialog';
 
 import cofactsClient from '../../lib/cofactsClient';
+
+export const SEARCHED_DATA = gql`
+  {
+    searchedData @client {
+      text
+      sourceText
+      sourceUrl
+    }
+  }
+`;
 
 /**
  * @param {string} articleId - Cofacts article ID
@@ -72,6 +82,8 @@ const SET_SEARCH_DATA = gql`
  */
 class ArticleSearchForm extends Component {
   static defaultProps = {
+    defaultValue: '',
+
     client: {}, // From ApolloConsumer
     saveSearchedData() {},
   };
@@ -153,6 +165,7 @@ class ArticleSearchForm extends Component {
   };
 
   render() {
+    const { defaultValue } = this.props;
     const { hyperlinkInDialog, isFetchingUrl } = this.state;
 
     return (
@@ -169,7 +182,7 @@ class ArticleSearchForm extends Component {
         )}
 
         <form onSubmit={this.handleSearch}>
-          <textarea name="searchedText" />
+          <textarea name="searchedText" defaultValue={defaultValue} />
           <button type="submit" disabled={isFetchingUrl}>
             {isFetchingUrl ? '載入中' : '看說法'}
           </button>
@@ -181,18 +194,23 @@ class ArticleSearchForm extends Component {
 
 function ArticleSearchFormContainer() {
   return (
-    <ApolloConsumer>
-      {client => (
-        <Mutation mutation={SET_SEARCH_DATA}>
-          {search => (
-            <ArticleSearchForm
-              client={client}
-              saveSearchedData={data => search({ variables: { data } })}
-            />
-          )}
-        </Mutation>
-      )}
-    </ApolloConsumer>
+    <Query query={SEARCHED_DATA}>
+      {({ data, client }) => {
+        const searchedText =
+          data && data.searchedData ? data.searchedData.text : undefined;
+        return (
+          <Mutation mutation={SET_SEARCH_DATA}>
+            {search => (
+              <ArticleSearchForm
+                defaultValue={searchedText}
+                client={client}
+                saveSearchedData={data => search({ variables: { data } })}
+              />
+            )}
+          </Mutation>
+        );
+      }}
+    </Query>
   );
 }
 

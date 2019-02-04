@@ -4,7 +4,7 @@ import Tab from '@material-ui/core/Tab';
 import { withTheme } from '@material-ui/core/styles';
 
 import AppBar from '../components/common/AppBar';
-import ArticleSearchForm from '../components/index/ArticleSearchForm';
+import ArticleSearchForm from '../components/common/ArticleSearchForm';
 import ArticleList from '../components/index/ArticleList';
 import ParagraphReplyList from '../components/index/ParagraphReplyList';
 import ReplyList from '../components/index/ReplyList';
