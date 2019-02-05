@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
-import { truncate } from '../../lib/text';
+import { truncate, parseTag } from '../../lib/text';
 
 const LIST_ARTICLES = gql`
   query listArticles($inText: String) {
@@ -27,7 +27,7 @@ function Article({ article: { text, _highlight } }) {
   return (
     <div>
       <h1>{title}</h1>
-      <p>{_highlight}</p>
+      <p>{parseTag(_highlight, { fromElem: 'HIGHLIGHT', toElem: 'mark' })}</p>
     </div>
   );
 }
