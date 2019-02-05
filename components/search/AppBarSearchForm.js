@@ -38,13 +38,18 @@ class AppBarSearchForm extends React.Component {
 
         <style jsx>{`
           .form {
-            position: relative;
+            flex: 1;
+            min-width: 0;
           }
 
           .fake-input {
             padding: 8px;
             background: rgba(255, 255, 255, 0.1);
             cursor: text;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
           }
         `}</style>
       </div>

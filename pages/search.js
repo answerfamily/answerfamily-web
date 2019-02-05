@@ -7,6 +7,7 @@ import AppBar from '../components/common/AppBar';
 import Layout from '../components/common/Layout';
 import { SEARCHED_DATA } from '../components/common/ArticleSearchForm';
 import ParagraphSearch from '../components/search/ParagraphSearch';
+import ArticleSearch from '../components/search/ArticleSearch';
 import Router from 'next/router';
 import AppBarTabs from '../components/search/AppBarTab';
 
@@ -19,8 +20,12 @@ class SearchPage extends React.Component {
     Router.push('/submit-article');
   };
 
+  handleTabChange = (event, tabValue) => {
+    this.setState({ currentTab: tabValue });
+  };
+
   render() {
-    const { currentTab } = this.props;
+    const { currentTab } = this.state;
 
     return (
       <Query query={SEARCHED_DATA}>
@@ -34,20 +39,38 @@ class SearchPage extends React.Component {
             );
           }
 
+          if (loading) {
+            return (
+              <Layout>
+                <AppBar />
+                <p>Loading...</p>
+              </Layout>
+            );
+          }
+
           const searchedText = data.searchedData ? data.searchedData.text : '';
 
           return (
             <Layout>
               <AppBar>
-                <AppBarTabs value={currentTab} />
+                <AppBarTabs
+                  value={currentTab}
+                  onChange={this.handleTabChange}
+                />
                 <AppBarSearchForm text={searchedText} />
               </AppBar>
 
-              <ParagraphSearch
-                text={searchedText}
-                loading={loading}
-                onSubmit={this.handleArticleSubmit}
-              />
+              {currentTab === 'articles' ? (
+                <ArticleSearch
+                  searchedText={searchedText}
+                  onSubmit={this.handleArticleSubmit}
+                />
+              ) : (
+                <ParagraphSearch
+                  text={searchedText}
+                  onSubmit={this.handleArticleSubmit}
+                />
+              )}
             </Layout>
           );
         }}
