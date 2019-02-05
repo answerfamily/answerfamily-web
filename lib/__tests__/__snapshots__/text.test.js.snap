@@ -172,6 +172,16 @@ Array [
 ]
 `;
 
+exports[`parseTag hanldes HIGHLIGHT parsing 1`] = `
+Array [
+  "foo ",
+  <span>
+    Foo!
+  </span>,
+  " bar",
+]
+`;
+
 exports[`truncate truncates nested DOM 1`] = `
 Array [
   <div>
