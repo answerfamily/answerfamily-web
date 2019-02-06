@@ -8,6 +8,8 @@ import HyperlinkActionDialog from './HyperlinkActionDialog';
 
 import cofactsClient from '../../lib/cofactsClient';
 
+const SEARCH_INPUT_NAME = 'searchedText';
+
 export const SEARCHED_DATA = gql`
   {
     searchedData @client {
@@ -83,15 +85,21 @@ const SET_SEARCH_DATA = gql`
 class ArticleSearchForm extends Component {
   static defaultProps = {
     defaultValue: '',
-
     client: {}, // From ApolloConsumer
     saveSearchedData() {},
+    children() {}, // ({inputName, defaultValue, isFetchingUrl}) => ReactElem
   };
 
   state = {
     isFetchingUrl: false,
     hyperlinkInDialog: null,
   };
+
+  componentDidMount() {
+    if (this.form && this.form[SEARCH_INPUT_NAME]) {
+      this.form[SEARCH_INPUT_NAME].focus();
+    }
+  }
 
   /**
    * @param {object} searchedData - client schema SearchDataInput
@@ -165,7 +173,7 @@ class ArticleSearchForm extends Component {
   };
 
   render() {
-    const { defaultValue } = this.props;
+    const { defaultValue, children } = this.props;
     const { hyperlinkInDialog, isFetchingUrl } = this.state;
 
     return (
@@ -181,18 +189,24 @@ class ArticleSearchForm extends Component {
           />
         )}
 
-        <form onSubmit={this.handleSearch}>
-          <textarea name="searchedText" defaultValue={defaultValue} />
-          <button type="submit" disabled={isFetchingUrl}>
-            {isFetchingUrl ? '載入中' : '看說法'}
-          </button>
+        <form
+          onSubmit={this.handleSearch}
+          ref={el => {
+            this.form = el;
+          }}
+        >
+          {children({
+            inputName: SEARCH_INPUT_NAME,
+            defaultValue,
+            isFetchingUrl,
+          })}
         </form>
       </>
     );
   }
 }
 
-function ArticleSearchFormContainer() {
+function ArticleSearchFormContainer({ classes, children }) {
   return (
     <Query query={SEARCHED_DATA}>
       {({ data, client }) => {
@@ -204,8 +218,11 @@ function ArticleSearchFormContainer() {
               <ArticleSearchForm
                 defaultValue={searchedText}
                 client={client}
+                classes={classes}
                 saveSearchedData={data => search({ variables: { data } })}
-              />
+              >
+                {children}
+              </ArticleSearchForm>
             )}
           </Mutation>
         );
