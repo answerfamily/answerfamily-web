@@ -1,7 +1,8 @@
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { authorize, logout } from '../../lib/auth0';
-import { dehydrate, setLoginRedirect } from '../../lib/auth';
+import { setLoginRedirect } from '../../lib/auth';
+import { dehydrate } from '../../lib/clientState';
 
 const ME = gql`
   {
@@ -27,8 +28,9 @@ function RequireLogin({ children }) {
           me: data ? data.me : null,
           authorize: () => {
             setLoginRedirect();
-            dehydrate(client);
-            authorize();
+            dehydrate(client).then(() => {
+              authorize();
+            });
           },
           deauthorize: () => {
             setLoginRedirect();
