@@ -6,14 +6,20 @@ import Button from '@material-ui/core/Button';
 
 import RequireLogin from './RequireLogin';
 import { Link } from '../../routes';
+import { Hidden } from '@material-ui/core';
 
 const styles = theme => ({
   title: {
     ...theme.typography.h6,
-    margin: `0 auto 0 ${theme.spacing.unit * 2}px`,
+    margin: `0 auto 0 0`,
+    paddingRight: theme.spacing.unit * 2,
     textDecoration: 'none',
     '&:hover': {
       textDecoration: 'underline',
+    },
+    '& img': {
+      verticalAlign: 'middle',
+      marginRight: theme.spacing.unit * 2,
     },
   },
 });
@@ -22,9 +28,11 @@ function AppBar({ children, position = 'static', classes }) {
   return (
     <MuiAppBar position={position} color="default">
       <Toolbar>
-        <img src={require('./appbar-logo.svg')} alt="Logo" />
         <Link route="/">
-          <a className={classes.title}>我愛家・我解惑</a>
+          <a className={classes.title}>
+            <img src={require('./appbar-logo.svg')} alt="Logo" />
+            <Hidden smDown>我愛家・我解惑</Hidden>
+          </a>
         </Link>
 
         {children}
