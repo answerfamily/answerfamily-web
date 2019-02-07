@@ -21,11 +21,25 @@ const styles = theme => ({
     position: 'relative',
     zIndex: theme.zIndex.appBar + 1 /* Higher than AppBar */,
     background: '#fff',
-    padding: '20px',
+    padding: '60px 20px',
+  },
+
+  title: {
+    textAlign: 'center',
+  },
+
+  subtitle: {
+    ...theme.typography.title,
+    textAlign: 'center',
+    letterSpacing: '6px',
+    color: '#5F5F5F',
+    marginBottom: theme.spacing.unit * 10,
   },
 
   paper: {
     padding: theme.spacing.unit,
+    maxWidth: '750px',
+    margin: '0 auto',
   },
 
   searchIcon: {
@@ -34,7 +48,7 @@ const styles = theme => ({
   },
 
   footer: {
-    paddingTop: theme.spacing.unit * 2,
+    paddingTop: theme.spacing.unit * 4,
     textAlign: 'center',
   },
 });
@@ -56,6 +70,15 @@ class Index extends Component {
       <div>
         <AppBar position="fixed" />
         <header className={classes.jumbotron}>
+          <h1 className={classes.title}>
+            <img
+              src={require('../components/index/title.svg')}
+              alt="我愛家我解惑"
+            />
+          </h1>
+
+          <h2 className={classes.subtitle}>平權社會對話工程資料庫</h2>
+
           <ArticleSearchForm>
             {({ inputName, defaultValue, isFetchingUrl }) => (
               <>

@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const withImages = require('next-images');
+
 const publicRuntimeConfig = {};
 const serverRuntimeConfig = {};
 
@@ -15,7 +17,7 @@ Object.keys(process.env).forEach(key => {
   }
 });
 
-module.exports = {
+module.exports = withImages({
   serverRuntimeConfig,
   publicRuntimeConfig,
-};
+});
