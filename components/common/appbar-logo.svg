@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="35px" height="32px" viewBox="0 0 35 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53 (72520) - https://sketchapp.com -->
+    <title>appbar-logo</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="1441 0 0 0 0 56 1441 56"></polygon>
+        <filter x="-0.6%" y="-14.3%" width="101.1%" height="135.7%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.24 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter2"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter2" result="shadowBlurOuter2"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" type="matrix" in="shadowBlurOuter2" result="shadowMatrixOuter2"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="shadowMatrixOuter2"></feMergeNode>
+            </feMerge>
+        </filter>
+        <path d="M34.8678443,31.8682373 L29.0456432,26.0633484 L4.21161826,26.0633484 C1.88560572,26.0633484 8.00808649e-16,24.1833495 5.15954269e-16,21.8642534 L0,4.19909502 C2.31099888e-16,1.87999888 1.88560572,9.40431131e-16 4.21161826,5.1442008e-16 L30.6431535,0 C32.9691661,8.84090297e-17 34.8547718,1.87999888 34.8547718,4.19909502 L34.8547718,17.8923187 L34.8678443,31.8682373 Z" id="path-3"></path>
+    </defs>
+    <g id="index" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Desktop-HD" transform="translate(-152.000000, -505.000000)">
+            <polygon id="bg" fill="#EEEEEE" points="0 492 0 1024 1440 1024 1440 492"></polygon>
+            <g id="app-bar" transform="translate(0.000000, 491.000000)">
+                <g id="app-bar-bg">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#F5F5F5" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g id="logo" transform="translate(152.000000, 14.000000)">
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <use id="shape" fill="#D8D8D8" xlink:href="#path-3"></use>
+                    <g id="color" mask="url(#mask-4)">
+                        <g transform="translate(17.427386, 16.506787) rotate(-90.000000) translate(-17.427386, -16.506787) translate(0.000000, -1.013575)" id="Rectangle-2">
+                            <polygon fill="#FF5368" points="0 0 34.8547718 0 34.8547718 5.85065459 0 5.85065459"></polygon>
+                            <polygon fill="#FF9753" points="0 5.82281709 34.8547718 5.82281709 34.8547718 11.6734717 0 11.6734717"></polygon>
+                            <polygon fill="#F1E11E" points="0 11.6456342 34.8547718 11.6456342 34.8547718 17.4962888 0 17.4962888"></polygon>
+                            <polygon fill="#7ED321" points="0 17.4684513 34.8547718 17.4684513 34.8547718 23.3191058 0 23.3191058"></polygon>
+                            <polygon fill="#53BAFF" points="0 23.2912683 34.8547718 23.2912683 34.8547718 29.1419229 0 29.1419229"></polygon>
+                            <polygon fill="#8F53FF" points="0 29.1140854 34.8547718 29.1140854 34.8547718 34.96474 0 34.96474"></polygon>
+                        </g>
+                    </g>
+                    <polyline id="Path-3" stroke="#FFFFFF" stroke-width="2.88288288" mask="url(#mask-4)" points="10.4564315 12.0276009 16.0371114 17.9547511 25.4440428 7.9638009"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
