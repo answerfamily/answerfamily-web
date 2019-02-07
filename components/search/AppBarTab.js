@@ -4,7 +4,7 @@ import Tab from '@material-ui/core/Tab';
 
 function AppBarTabs({ value, onChange }) {
   return (
-    <Tabs value={value} onChange={onChange}>
+    <Tabs value={value} onChange={onChange} style={{ marginRight: 'auto' }}>
       <Tab label="愛家敘述" value="articles" />
       <Tab label="平權回應" value="paragraphs" />
     </Tabs>

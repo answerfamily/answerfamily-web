@@ -10,6 +10,7 @@ import ParagraphSearch from '../components/search/ParagraphSearch';
 import ArticleSearch from '../components/search/ArticleSearch';
 import Router from 'next/router';
 import AppBarTabs from '../components/search/AppBarTab';
+import { Hidden } from '@material-ui/core';
 
 class SearchPage extends React.Component {
   state = {
@@ -57,7 +58,9 @@ class SearchPage extends React.Component {
                   value={currentTab}
                   onChange={this.handleTabChange}
                 />
-                <AppBarSearchForm text={searchedText} />
+                <Hidden xsDown>
+                  <AppBarSearchForm text={searchedText} />
+                </Hidden>
               </AppBar>
 
               {currentTab === 'articles' ? (
