@@ -3,13 +3,15 @@ import { withStyles } from '@material-ui/core';
 
 const styles = theme => ({
   container: {
+    ...theme.mixins.gutters(),
     display: 'grid',
-    gridTemplateColumns: '[start] 100% [end]',
+    gridGap: `${theme.spacing.unit}px`,
+    gridTemplateColumns: '[col-start] 100% [col-end]',
     [theme.breakpoints.up('md')]: {
-      gridTemplateColumns: '[start] 1fr 1fr [end]',
+      gridTemplateColumns: '[col-start] 1fr [col-end] 1fr',
     },
     '& > header, & > footer': {
-      gridColumn: 'start / end',
+      gridColumn: 'col-start / col-end',
     },
   },
 });
@@ -92,8 +94,8 @@ class ArticleParagraphSections extends PureComponent {
   static defaultProps = {
     article: '',
     paragraphs: [],
-    headerRenderer() {},
-    footerRenderer() {},
+    headerContentRenderer() {},
+    footerContentRenderer() {},
     articleRenderer() {},
     paragraphsRenderer() {},
   };
@@ -103,8 +105,8 @@ class ArticleParagraphSections extends PureComponent {
       article,
       paragraphs,
       classes,
-      headerRenderer,
-      footerRenderer,
+      headerContentRenderer,
+      footerContentRenderer,
       articleRenderer,
       paragraphsRenderer,
     } = this.props;
@@ -131,7 +133,8 @@ class ArticleParagraphSections extends PureComponent {
 
     return (
       <div className={classes.container}>
-        <header>{headerRenderer()}</header>
+        <header>{headerContentRenderer()}</header>
+        <div />
         {sections.map(({ text, paragraphs, highlights }, sectionIdx) => {
           let paragraphElem = null;
           if (paragraphs.length > 0) {
@@ -153,7 +156,7 @@ class ArticleParagraphSections extends PureComponent {
             </Fragment>
           );
         })}
-        <footer>{footerRenderer()}</footer>
+        <footer>{footerContentRenderer()}</footer>
       </div>
     );
   }

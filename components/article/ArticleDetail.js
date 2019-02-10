@@ -273,8 +273,8 @@ class ArticleDetail extends Component {
         <ArticleParagraphSections
           article={article.text}
           paragraphs={article.paragraphs}
-          headerRenderer={this.renderSourceForm}
-          footerRenderer={this.renderHyperlinks}
+          headerContentRenderer={this.renderSourceForm}
+          footerContentRenderer={this.renderHyperlinks}
           articleRenderer={this.renderArticle}
           paragraphsRenderer={this.renderParagraphs}
         />
