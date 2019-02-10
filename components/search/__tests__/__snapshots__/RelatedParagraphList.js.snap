@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`makeSectionsFromParagraphs matches paragraphs and sorts correctly 1`] = `
+Array [
+  Object {
+    "highlights": Array [
+      "0",
+      "2000",
+      "同樣的人員同樣的設備同樣的機器",
+      "你告訴我偽陰性",
+      "就是說今天他明明就是有愛滋",
+      "梅毒",
+      "B",
+      "肝",
+      "C",
+      "肝帶原者的血液",
+      "你今天告訴我偽陽性每年大概有",
+      "多人",
+      "你告訴我偽陰性每年連一件都沒有",
+      "是",
+      "檢測",
+    ],
+    "paragraphs": Array [
+      Object {
+        "_highlight": "<HIGHLIGHT>同樣的人員同樣的設備同樣的機器</HIGHLIGHT>，<HIGHLIGHT>你告訴我偽陰性</HIGHLIGHT>，<HIGHLIGHT>就是說今天他明明就是有愛滋</HIGHLIGHT>、<HIGHLIGHT>梅毒</HIGHLIGHT>、<HIGHLIGHT>B</HIGHLIGHT><HIGHLIGHT>肝</HIGHLIGHT><HIGHLIGHT>C</HIGHLIGHT><HIGHLIGHT>肝帶原者的血液</HIGHLIGHT>，<HIGHLIGHT>你今天告訴我偽陽性每年大概有</HIGHLIGHT> <HIGHLIGHT>2000</HIGHLIGHT> <HIGHLIGHT>多人</HIGHLIGHT>，<HIGHLIGHT>你告訴我偽陰性每年連一件都沒有</HIGHLIGHT>，<HIGHLIGHT>是</HIGHLIGHT> <HIGHLIGHT>0</HIGHLIGHT>",
+        "id": "chmhpGgBdRnHeaV4n7mx",
+        "text": "同樣的人員同樣的設備同樣的機器，你告訴我偽陰性，就是說今天他明明就是有愛滋、梅毒、B肝C肝帶原者的血液，你今天告訴我偽陽性每年大概有 2000 多人，你告訴我偽陰性每年連一件都沒有，是 0",
+      },
+      Object {
+        "_highlight": "您的家人曾經因輸血而造成<HIGHLIGHT>愛滋梅毒</HIGHLIGHT><HIGHLIGHT>B</HIGHLIGHT><HIGHLIGHT>肝</HIGHLIGHT><HIGHLIGHT>C</HIGHLIGHT><HIGHLIGHT>肝</HIGHLIGHT>",
+        "id": "ehndpGgBdRnHeaV4vLnG",
+        "text": "您的家人曾經因輸血而造成愛滋梅毒B肝C肝",
+      },
+      Object {
+        "_highlight": "最強最厲害的<HIGHLIGHT>檢測</HIGHLIGHT>，最有經驗的，<HIGHLIGHT>同樣也是用核酸檢測</HIGHLIGHT>法的美國跟日本，都有因為<HIGHLIGHT>偽陰性愛滋病血液</HIGHLIGHT>流傳到醫院，而造成死亡的案例。",
+        "id": "cRmapGgBdRnHeaV4kLke",
+        "text": "最強最厲害的檢測，最有經驗的，同樣也是用核酸檢測法的美國跟日本，都有因為偽陰性愛滋病血液流傳到醫院，而造成死亡的案例。",
+      },
+    ],
+    "text": "台灣血液基金會，就是所謂的捐血中心，他們每年偽陽性的患者，就是說你的血液是沒有問題的，但是他檢測報告卻說，先生你的血液裡面有愛滋病，有梅毒，有B肝C肝，你不得捐血。各位你們知道嗎，這種人數有多少嗎？每年大概有 2~3000 人。那我想請問，同樣的人員同樣的設備同樣的機器，你告訴我偽陰性，就是說今天他明明就是有愛滋、梅毒、B肝C肝帶原者的血液，你今天告訴我偽陽性每年大概有 2000 多人，你告訴我偽陰性每年連一件都沒有，是 0。",
+  },
+]
+`;
