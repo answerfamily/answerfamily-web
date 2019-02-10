@@ -1,3 +1,16 @@
+import { PureComponent, Fragment } from 'react';
+import { withStyles } from '@material-ui/core';
+
+const styles = theme => ({
+  container: {
+    display: 'grid',
+    gridTemplateColumns: '100%',
+    [theme.breakpoints.up('md')]: {
+      gridTemplateColumns: '1fr 1fr',
+    },
+  },
+});
+
 /**
  * Matches text and paragraphs and returns all sections. Each section is a paragraph in inText,
  * and the matching paragraph from API, and the highlighted text.
@@ -11,7 +24,13 @@ export function makeSectionsFromParagraphs(article, paragraphs) {
   //
   const highlightToParagraphs = {};
   paragraphs.forEach(paragraph => {
-    const highlighted = paragraph._highlight || '';
+    if (!paragraph._highlight) {
+      // Use the full text of the paragraph as 'highlight' if no _highlight is attached
+      highlightToParagraphs[paragraph.text] = [paragraph];
+      return;
+    }
+
+    const highlighted = paragraph._highlight;
     const highlightRegExp = /<HIGHLIGHT>(.*?)<\/HIGHLIGHT>/gim;
 
     let match;
@@ -58,3 +77,53 @@ export function makeSectionsFromParagraphs(article, paragraphs) {
     };
   });
 }
+
+class ArticleParagraphSections extends PureComponent {
+  static defaultProps = {
+    article: '',
+    paragraphs: [],
+  };
+
+  render() {
+    const { article, paragraphs, classes } = this.props;
+
+    const sections = makeSectionsFromParagraphs(article, paragraphs);
+
+    // Calculates number of "spans" for each section, to enlarge the section across text that
+    // don't have highlighted paragraphs.
+    //
+    const spans = sections.reduceRight(
+      (currentSpans, section, idx) => {
+        if (idx === 0) {
+          // 1st section's span is already calculated
+          return currentSpans;
+        }
+        if (section.paragraphs.length > 0) {
+          return [1, ...currentSpans];
+        }
+
+        return [currentSpans[0] + 1, ...currentSpans];
+      },
+      [1]
+    );
+
+    return (
+      <div className={classes.container}>
+        {sections.map(({ text, paragraphs, highlights }, sectionIdx) => (
+          <Fragment key={sectionIdx}>
+            <article>{text}</article>
+            {sectionIdx === 0 || paragraphs.length > 0 ? (
+              <section style={{ gridRowEnd: `span ${spans[sectionIdx]}` }}>
+                {paragraphs.map(paragraph => (
+                  <p key={paragraph.id}>P {paragraph.text}</p>
+                ))}
+              </section>
+            ) : null}
+          </Fragment>
+        ))}
+      </div>
+    );
+  }
+}
+
+export default withStyles(styles)(ArticleParagraphSections);

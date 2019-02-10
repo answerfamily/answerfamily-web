@@ -1,6 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`makeSectionsFromParagraphs matches paragraphs and sorts correctly 1`] = `
+exports[`makeSectionsFromParagraphs matches article paragraphs (no _highlight field, use paragraph text) 1`] = `
+Array [
+  Object {
+    "highlights": Array [
+      "同樣的人員同樣的設備同樣的機器，你告訴我偽陰性，就是說今天他明明就是有愛滋、梅毒、B肝C肝帶原者的血液，你今天告訴我偽陽性每年大概有 2000 多人，你告訴我偽陰性每年連一件都沒有，是 0",
+    ],
+    "paragraphs": Array [
+      Object {
+        "id": "chmhpGgBdRnHeaV4n7mx",
+        "text": "同樣的人員同樣的設備同樣的機器，你告訴我偽陰性，就是說今天他明明就是有愛滋、梅毒、B肝C肝帶原者的血液，你今天告訴我偽陽性每年大概有 2000 多人，你告訴我偽陰性每年連一件都沒有，是 0",
+      },
+    ],
+    "text": "台灣血液基金會，就是所謂的捐血中心，他們每年偽陽性的患者，就是說你的血液是沒有問題的，但是他檢測報告卻說，先生你的血液裡面有愛滋病，有梅毒，有B肝C肝，你不得捐血。各位你們知道嗎，這種人數有多少嗎？每年大概有 2~3000 人。那我想請問，同樣的人員同樣的設備同樣的機器，你告訴我偽陰性，就是說今天他明明就是有愛滋、梅毒、B肝C肝帶原者的血液，你今天告訴我偽陽性每年大概有 2000 多人，你告訴我偽陰性每年連一件都沒有，是 0。",
+  },
+]
+`;
+
+exports[`makeSectionsFromParagraphs matches searched paragraphs (with _highlight field) and sorts correctly 1`] = `
 Array [
   Object {
     "highlights": Array [

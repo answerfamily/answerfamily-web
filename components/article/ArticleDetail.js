@@ -12,6 +12,7 @@ import SplitLayout from '../common/SplitLayout';
 import HyperlinkActionDialog from '../common/HyperlinkActionDialog';
 
 import { mark, nl2br, linkify } from '../../lib/text';
+import ArticleParagraphSections from '../common/ArticleParagraphSections';
 
 const articleFragment = gql`
   fragment articleDetail on Article {
@@ -179,126 +180,133 @@ class ArticleDetail extends Component {
     );
 
     return (
-      <SplitLayout>
-        {hyperlinkInDialog && (
-          <HyperlinkActionDialog
-            title={hyperlinkInDialog.title}
-            url={hyperlinkInDialog.url}
-            summary={hyperlinkInDialog.summary}
-            articleSources={hyperlinkInDialog.articleSources}
-            open
-            onClose={this.handleUrlDialogClose}
-          />
-        )}
-        <section className="article">
-          <Mutation mutation={NEW_SOURCE}>
-            {addSource => (
-              <Mutation mutation={DELETE_SOURCE}>
-                {deleteSource => (
-                  <SourcesForm
-                    sources={article.sources}
-                    onAdd={source =>
-                      addSource({
-                        variables: { source, articleId: article.id },
-                      })
-                    }
-                    onDelete={idx => {
-                      const sourceId = article.sources[idx].id;
-                      deleteSource({ variables: { sourceId } });
-                    }}
-                  />
-                )}
-              </Mutation>
-            )}
-          </Mutation>
-          <article>
-            {nl2br(
-              linkify(
-                mark(
-                  mark(article.text, {
-                    stringsToMatch: paragraphTexts,
-                    props: {
-                      onClick: this.handleHighlightClick,
-                    },
-                  }),
-                  {
-                    stringsToMatch: [searchedText],
-                    props: {
-                      className: 'is-searched',
-                    },
-                  }
-                ),
-                { props: { onClick: this.handleUrlClick } }
-              )
-            )}
-          </article>
-          {article.hyperlinks.length > 0 && (
-            <footer className="hyperlinks">
-              {article.hyperlinks
-                .filter(h => h)
-                .map((hyperlink, idx) => (
-                  <Hyperlink
-                    key={idx}
-                    hyperlink={hyperlink}
-                    showDialogOnClick
-                  />
-                ))}
-            </footer>
-          )}
-        </section>
-        <section className="paragraph-panel">
-          <input
-            type="search"
-            value={searchedText}
-            onChange={this.handleTextSearch}
-          />
-
-          <div className="paragraphs">
-            {filteredParagraphs.map(paragraph => (
-              <Mutation key={paragraph.id} mutation={DELETE_PARAGRAPH}>
-                {(deleteParagraph, { loading }) => (
-                  <ExistingParagraph
-                    paragraph={paragraph}
-                    loading={loading}
-                    deleteParagraph={deleteParagraph}
-                    highlightedText={searchedText}
-                  />
-                )}
-              </Mutation>
-            ))}
-          </div>
-
-          <Mutation mutation={NEW_PARAGRAPH}>
-            {(createParagraph, { loading }) => (
-              <NewParagraphEditor
-                articleId={article.id}
-                createParagraph={createParagraph}
-                loading={loading}
-              />
-            )}
-          </Mutation>
-        </section>
-
-        <style jsx>{`
-          .hyperlinks {
-            display: flex;
-            flex-flow: row wrap;
-          }
-
-          .paragraph-panel {
-            background: ${blueGrey[50]};
-          }
-
-          .paragraphs {
-            padding: 16px;
-          }
-
-          article :global(mark.is-searched) {
-            background: orange;
-          }
-        `}</style>
-      </SplitLayout>
+      <ArticleParagraphSections
+        article={article.text}
+        paragraphs={article.paragraphs}
+      />
     );
+
+    // return (
+    //   <SplitLayout>
+    //     {hyperlinkInDialog && (
+    //       <HyperlinkActionDialog
+    //         title={hyperlinkInDialog.title}
+    //         url={hyperlinkInDialog.url}
+    //         summary={hyperlinkInDialog.summary}
+    //         articleSources={hyperlinkInDialog.articleSources}
+    //         open
+    //         onClose={this.handleUrlDialogClose}
+    //       />
+    //     )}
+    //     <section className="article">
+    //       <Mutation mutation={NEW_SOURCE}>
+    //         {addSource => (
+    //           <Mutation mutation={DELETE_SOURCE}>
+    //             {deleteSource => (
+    //               <SourcesForm
+    //                 sources={article.sources}
+    //                 onAdd={source =>
+    //                   addSource({
+    //                     variables: { source, articleId: article.id },
+    //                   })
+    //                 }
+    //                 onDelete={idx => {
+    //                   const sourceId = article.sources[idx].id;
+    //                   deleteSource({ variables: { sourceId } });
+    //                 }}
+    //               />
+    //             )}
+    //           </Mutation>
+    //         )}
+    //       </Mutation>
+    //       <article>
+    //         {nl2br(
+    //           linkify(
+    //             mark(
+    //               mark(article.text, {
+    //                 stringsToMatch: paragraphTexts,
+    //                 props: {
+    //                   onClick: this.handleHighlightClick,
+    //                 },
+    //               }),
+    //               {
+    //                 stringsToMatch: [searchedText],
+    //                 props: {
+    //                   className: 'is-searched',
+    //                 },
+    //               }
+    //             ),
+    //             { props: { onClick: this.handleUrlClick } }
+    //           )
+    //         )}
+    //       </article>
+    //       {article.hyperlinks.length > 0 && (
+    //         <footer className="hyperlinks">
+    //           {article.hyperlinks
+    //             .filter(h => h)
+    //             .map((hyperlink, idx) => (
+    //               <Hyperlink
+    //                 key={idx}
+    //                 hyperlink={hyperlink}
+    //                 showDialogOnClick
+    //               />
+    //             ))}
+    //         </footer>
+    //       )}
+    //     </section>
+    //     <section className="paragraph-panel">
+    //       <input
+    //         type="search"
+    //         value={searchedText}
+    //         onChange={this.handleTextSearch}
+    //       />
+
+    //       <div className="paragraphs">
+    //         {filteredParagraphs.map(paragraph => (
+    //           <Mutation key={paragraph.id} mutation={DELETE_PARAGRAPH}>
+    //             {(deleteParagraph, { loading }) => (
+    //               <ExistingParagraph
+    //                 paragraph={paragraph}
+    //                 loading={loading}
+    //                 deleteParagraph={deleteParagraph}
+    //                 highlightedText={searchedText}
+    //               />
+    //             )}
+    //           </Mutation>
+    //         ))}
+    //       </div>
+
+    //       <Mutation mutation={NEW_PARAGRAPH}>
+    //         {(createParagraph, { loading }) => (
+    //           <NewParagraphEditor
+    //             articleId={article.id}
+    //             createParagraph={createParagraph}
+    //             loading={loading}
+    //           />
+    //         )}
+    //       </Mutation>
+    //     </section>
+
+    //     <style jsx>{`
+    //       .hyperlinks {
+    //         display: flex;
+    //         flex-flow: row wrap;
+    //       }
+
+    //       .paragraph-panel {
+    //         background: ${blueGrey[50]};
+    //       }
+
+    //       .paragraphs {
+    //         padding: 16px;
+    //       }
+
+    //       article :global(mark.is-searched) {
+    //         background: orange;
+    //       }
+    //     `}</style>
+    //   </SplitLayout>
+    // );
   }
 }
 
