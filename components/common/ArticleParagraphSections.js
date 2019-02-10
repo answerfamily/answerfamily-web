@@ -4,9 +4,12 @@ import { withStyles } from '@material-ui/core';
 const styles = theme => ({
   container: {
     display: 'grid',
-    gridTemplateColumns: '100%',
+    gridTemplateColumns: '[start] 100% [end]',
     [theme.breakpoints.up('md')]: {
-      gridTemplateColumns: '1fr 1fr',
+      gridTemplateColumns: '[start] 1fr 1fr [end]',
+    },
+    '& > header, & > footer': {
+      gridColumn: 'start / end',
     },
   },
 });
@@ -26,7 +29,14 @@ export function makeSectionsFromParagraphs(article, paragraphs) {
   paragraphs.forEach(paragraph => {
     if (!paragraph._highlight) {
       // Use the full text of the paragraph as 'highlight' if no _highlight is attached
-      highlightToParagraphs[paragraph.text] = [paragraph];
+      paragraph.text
+        .split('\n')
+        .filter(p => p)
+        .forEach(highlightedTerm => {
+          highlightToParagraphs[highlightedTerm] =
+            highlightToParagraphs[highlightedTerm] || [];
+          highlightToParagraphs[highlightedTerm].push(paragraph);
+        });
       return;
     }
 
@@ -82,10 +92,22 @@ class ArticleParagraphSections extends PureComponent {
   static defaultProps = {
     article: '',
     paragraphs: [],
+    headerRenderer() {},
+    footerRenderer() {},
+    articleRenderer() {},
+    paragraphsRenderer() {},
   };
 
   render() {
-    const { article, paragraphs, classes } = this.props;
+    const {
+      article,
+      paragraphs,
+      classes,
+      headerRenderer,
+      footerRenderer,
+      articleRenderer,
+      paragraphsRenderer,
+    } = this.props;
 
     const sections = makeSectionsFromParagraphs(article, paragraphs);
 
@@ -109,18 +131,29 @@ class ArticleParagraphSections extends PureComponent {
 
     return (
       <div className={classes.container}>
-        {sections.map(({ text, paragraphs, highlights }, sectionIdx) => (
-          <Fragment key={sectionIdx}>
-            <article>{text}</article>
-            {sectionIdx === 0 || paragraphs.length > 0 ? (
-              <section style={{ gridRowEnd: `span ${spans[sectionIdx]}` }}>
-                {paragraphs.map(paragraph => (
-                  <p key={paragraph.id}>P {paragraph.text}</p>
-                ))}
-              </section>
-            ) : null}
-          </Fragment>
-        ))}
+        <header>{headerRenderer()}</header>
+        {sections.map(({ text, paragraphs, highlights }, sectionIdx) => {
+          let paragraphElem = null;
+          if (paragraphs.length > 0) {
+            paragraphElem = paragraphsRenderer({
+              paragraphs,
+              highlights,
+              style: { gridRowEnd: `span ${spans[sectionIdx]}` },
+            });
+          } else if (sectionIdx === 0) {
+            paragraphElem = (
+              <section style={{ gridRowEnd: `span ${spans[sectionIdx]}` }} />
+            );
+          }
+
+          return (
+            <Fragment key={sectionIdx}>
+              {articleRenderer({ text, highlights })}
+              {paragraphElem}
+            </Fragment>
+          );
+        })}
+        <footer>{footerRenderer()}</footer>
       </div>
     );
   }
