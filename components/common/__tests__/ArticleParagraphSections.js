@@ -1,4 +1,4 @@
-import { makeSectionsFromParagraphs } from '../RelatedParagraphList';
+import { makeSectionsFromParagraphs } from '../ArticleParagraphSections';
 
 describe('makeSectionsFromParagraphs', () => {
   it('handles empty paragraphs', () => {
