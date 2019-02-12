@@ -1,6 +1,17 @@
 import { Component, PureComponent } from 'react';
 import gql from 'graphql-tag';
-import { withStyles } from '@material-ui/core';
+import {
+  withStyles,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  IconButton,
+  ListSubheader,
+} from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+import { linkify } from '../../lib/text';
 
 const styles = theme => ({
   container: {
@@ -25,16 +36,16 @@ class Source extends PureComponent {
   render() {
     const { note, url, onDelete } = this.props;
     return (
-      <li>
-        {note}
-        <br />
-        {url}
+      <ListItem>
+        <ListItemText primary={note} secondary={linkify(url)} />
         {onDelete && (
-          <button type="button" onClick={this.handleDelete}>
-            刪除
-          </button>
+          <ListItemSecondaryAction>
+            <IconButton onClick={this.handleDelete}>
+              <DeleteIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
         )}
-      </li>
+      </ListItem>
     );
   }
 }
@@ -75,8 +86,7 @@ class SourcesForm extends Component {
 
     return (
       <section className={classes.container}>
-        <h6>愛家論述出處</h6>
-        <ul>
+        <List subheader={<ListSubheader>愛家論述出處</ListSubheader>} dense>
           {sources.map(({ note, url }, idx) => (
             <Source
               key={idx}
@@ -86,7 +96,7 @@ class SourcesForm extends Component {
               onDelete={onDelete}
             />
           ))}
-        </ul>
+        </List>
         {onAdd && (
           <form onSubmit={this.handleNewSourceSubmit}>
             <label>
