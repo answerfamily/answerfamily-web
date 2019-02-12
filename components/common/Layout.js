@@ -1,21 +1,21 @@
+import { withStyles } from '@material-ui/core';
+
+const style = theme => ({
+  layout: {
+    minHeight: '100vh',
+    display: 'flex',
+    flexFlow: 'column',
+    background: theme.palette.background.default,
+  },
+});
+
 /**
  * Add AppBar and container to layout.
  *
  * @param {ReactElement[]} props.children
  */
-function Layout({ children }) {
-  return (
-    <div className="layout">
-      {children}
-      <style jsx>{`
-        .layout {
-          min-height: 100vh;
-          display: flex;
-          flex-flow: column;
-        }
-      `}</style>
-    </div>
-  );
+function Layout({ children, classes }) {
+  return <div className={classes.layout}>{children}</div>;
 }
 
-export default Layout;
+export default withStyles(style)(Layout);
