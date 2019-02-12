@@ -1,6 +1,6 @@
 import { withStyles } from '@material-ui/core';
 
-const style = theme => ({
+const styles = theme => ({
   layout: {
     minHeight: '100vh',
     display: 'flex',
@@ -18,4 +18,4 @@ function Layout({ children, classes }) {
   return <div className={classes.layout}>{children}</div>;
 }
 
-export default withStyles(style)(Layout);
+export default withStyles(styles)(Layout);

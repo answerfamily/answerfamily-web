@@ -1,5 +1,13 @@
 import { Component, PureComponent } from 'react';
 import gql from 'graphql-tag';
+import { withStyles } from '@material-ui/core';
+
+const styles = theme => ({
+  container: {
+    ...theme.mixins.gutters(),
+    margin: `${theme.spacing.unit * 2}px 0`,
+  },
+});
 
 class Source extends PureComponent {
   static defaultProps = {
@@ -63,10 +71,11 @@ class SourcesForm extends Component {
   };
 
   render() {
-    const { sources, onAdd, onDelete } = this.props;
+    const { sources, onAdd, onDelete, classes } = this.props;
 
     return (
-      <section>
+      <section className={classes.container}>
+        <h6>愛家論述出處</h6>
         <ul>
           {sources.map(({ note, url }, idx) => (
             <Source
@@ -97,4 +106,4 @@ class SourcesForm extends Component {
   }
 }
 
-export default SourcesForm;
+export default withStyles(styles)(SourcesForm);

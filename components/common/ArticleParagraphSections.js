@@ -1,10 +1,14 @@
 import { PureComponent, Fragment } from 'react';
-import { withStyles } from '@material-ui/core';
+import { withStyles, Paper } from '@material-ui/core';
 
 const styles = theme => ({
   container: {
     ...theme.mixins.gutters(),
+  },
+
+  paper: {
     display: 'grid',
+    padding: `${theme.spacing.unit * 2}px`,
     gridGap: `${theme.spacing.unit}px`,
     gridTemplateColumns: '[col-start] 100% [col-end]',
     [theme.breakpoints.up('md')]: {
@@ -133,30 +137,32 @@ class ArticleParagraphSections extends PureComponent {
 
     return (
       <div className={classes.container}>
-        <header>{headerContentRenderer()}</header>
-        <div />
-        {sections.map(({ text, paragraphs, highlights }, sectionIdx) => {
-          let paragraphElem = null;
-          if (paragraphs.length > 0) {
-            paragraphElem = paragraphsRenderer({
-              paragraphs,
-              highlights,
-              style: { gridRowEnd: `span ${spans[sectionIdx]}` },
-            });
-          } else if (sectionIdx === 0) {
-            paragraphElem = (
-              <section style={{ gridRowEnd: `span ${spans[sectionIdx]}` }} />
-            );
-          }
+        <Paper className={classes.paper}>
+          <header>{headerContentRenderer()}</header>
+          <div />
+          {sections.map(({ text, paragraphs, highlights }, sectionIdx) => {
+            let paragraphElem = null;
+            if (paragraphs.length > 0) {
+              paragraphElem = paragraphsRenderer({
+                paragraphs,
+                highlights,
+                style: { gridRowEnd: `span ${spans[sectionIdx]}` },
+              });
+            } else if (sectionIdx === 0) {
+              paragraphElem = (
+                <section style={{ gridRowEnd: `span ${spans[sectionIdx]}` }} />
+              );
+            }
 
-          return (
-            <Fragment key={sectionIdx}>
-              {articleRenderer({ text, highlights })}
-              {paragraphElem}
-            </Fragment>
-          );
-        })}
-        <footer>{footerContentRenderer()}</footer>
+            return (
+              <Fragment key={sectionIdx}>
+                {articleRenderer({ text, highlights })}
+                {paragraphElem}
+              </Fragment>
+            );
+          })}
+          <footer>{footerContentRenderer()}</footer>
+        </Paper>
       </div>
     );
   }
