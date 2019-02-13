@@ -12,7 +12,7 @@ const styles = theme => ({
     gridGap: `${theme.spacing.unit}px`,
     gridTemplateColumns: '[col-start] 100% [col-end]',
     [theme.breakpoints.up('md')]: {
-      gridTemplateColumns: '[col-start] 1fr [col-end] 1fr',
+      gridTemplateColumns: '[col-start] 1fr [col-end] 1.618fr',
     },
     '& > header, & > footer': {
       gridColumn: 'col-start / col-end',
