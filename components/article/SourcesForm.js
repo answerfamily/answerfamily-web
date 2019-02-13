@@ -6,6 +6,8 @@ import {
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
+  ListItemAvatar,
+  Avatar,
   IconButton,
   ListSubheader,
 } from '@material-ui/core';
@@ -17,6 +19,9 @@ const styles = theme => ({
   container: {
     ...theme.mixins.gutters(),
     margin: `${theme.spacing.unit * 2}px 0`,
+  },
+  preview: {
+    borderRadius: `${theme.spacing.unit}px`,
   },
 });
 
@@ -34,9 +39,12 @@ class Source extends PureComponent {
   };
 
   render() {
-    const { note, url, onDelete } = this.props;
+    const { note, url, topImageUrl, onDelete, classes } = this.props;
     return (
       <ListItem>
+        <ListItemAvatar>
+          <Avatar className={classes.preview} src={topImageUrl} />
+        </ListItemAvatar>
         <ListItemText primary={note} secondary={linkify(url)} />
         {onDelete && (
           <ListItemSecondaryAction>
@@ -64,6 +72,9 @@ class SourcesForm extends Component {
         note
         url
         createdAt
+        hyperlink {
+          topImageUrl
+        }
       }
     `,
   };
@@ -81,19 +92,25 @@ class SourcesForm extends Component {
     e.target.reset();
   };
 
+  renderHeader = () => {
+    return <ListSubheader disableSticky={true}>愛家論述出處</ListSubheader>;
+  };
+
   render() {
     const { sources, onAdd, onDelete, classes } = this.props;
 
     return (
       <section className={classes.container}>
-        <List subheader={<ListSubheader>愛家論述出處</ListSubheader>} dense>
-          {sources.map(({ note, url }, idx) => (
+        <List subheader={this.renderHeader()}>
+          {sources.map(({ note, url, hyperlink }, idx) => (
             <Source
               key={idx}
               idx={idx}
               note={note}
               url={url}
+              topImageUrl={hyperlink && hyperlink.topImageUrl}
               onDelete={onDelete}
+              classes={classes}
             />
           ))}
         </List>
