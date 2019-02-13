@@ -10,15 +10,27 @@ import {
   Avatar,
   IconButton,
   ListSubheader,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  TextField,
 } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/AddCircleOutline';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { linkify } from '../../lib/text';
+import RequireLogin from '../common/RequireLogin';
 
 const styles = theme => ({
   container: {
     ...theme.mixins.gutters(),
     margin: `${theme.spacing.unit * 2}px 0`,
+  },
+  header: {
+    position: 'relative', // for <ListItemSecondaryAction>
   },
   preview: {
     borderRadius: `${theme.spacing.unit}px`,
@@ -79,6 +91,16 @@ class SourcesForm extends Component {
     `,
   };
 
+  state = {
+    showNewSourceForm: false,
+  };
+
+  toggleNewSourceForm = () => {
+    this.setState(({ showNewSourceForm }) => ({
+      showNewSourceForm: !showNewSourceForm,
+    }));
+  };
+
   handleNewSourceSubmit = e => {
     e.preventDefault();
 
@@ -93,11 +115,29 @@ class SourcesForm extends Component {
   };
 
   renderHeader = () => {
-    return <ListSubheader disableSticky={true}>愛家論述出處</ListSubheader>;
+    const { classes, onAdd } = this.props;
+
+    return (
+      <RequireLogin>
+        {({ me }) => (
+          <ListSubheader className={classes.header} disableSticky={true}>
+            愛家論述出處
+            {me && onAdd && (
+              <ListItemSecondaryAction>
+                <IconButton onClick={this.toggleNewSourceForm}>
+                  <AddIcon color="primary" />
+                </IconButton>
+              </ListItemSecondaryAction>
+            )}
+          </ListSubheader>
+        )}
+      </RequireLogin>
+    );
   };
 
   render() {
-    const { sources, onAdd, onDelete, classes } = this.props;
+    const { sources, onDelete, classes } = this.props;
+    const { showNewSourceForm } = this.state;
 
     return (
       <section className={classes.container}>
@@ -114,20 +154,29 @@ class SourcesForm extends Component {
             />
           ))}
         </List>
-        {onAdd && (
+        <Dialog open={showNewSourceForm} onClose={this.toggleNewSourceForm}>
           <form onSubmit={this.handleNewSourceSubmit}>
-            <label>
-              URL
-              <input type="text" name="url" />
-            </label>
-            <label>
-              描述
-              <input type="text" name="note" />
-            </label>
+            <DialogTitle>新增論述出處</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                若您發現這個論述刊載在網路上的其他地方，請提供在此。新增出處之後，這個資料庫會把內文中提及此連結的其他論述，都連結到這裡來。
+              </DialogContentText>
 
-            <button type="submit">新增出處</button>
+              <TextField
+                label="簡短描述出處"
+                name="note"
+                fullWidth
+                margin="normal"
+              />
+              <TextField label="URL" name="url" fullWidth margin="normal" />
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary" type="submit">
+                新增此出處
+              </Button>
+            </DialogActions>
           </form>
-        )}
+        </Dialog>
       </section>
     );
   }
