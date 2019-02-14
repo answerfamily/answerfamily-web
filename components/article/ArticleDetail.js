@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, PureComponent } from 'react';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import { produce } from 'immer';
 import gql from 'graphql-tag';
@@ -53,6 +53,28 @@ const DELETE_PARAGRAPH = gql`
 const EMPTY_PARAGRAPH = {
   text: '',
 };
+
+class SelectionListener extends PureComponent {
+  static defaultProps = {
+    onChange() {},
+  };
+
+  handleSelectionChange = () => {
+    this.props.onChange(window.getSelection());
+  };
+
+  componentDidMount() {
+    document.addEventListener('selectionchange', this.handleSelectionChange);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('selectionchange', this.handleSelectionChange);
+  }
+
+  render() {
+    return null;
+  }
+}
 
 class NewParagraphEditor extends Component {
   state = {
@@ -122,6 +144,7 @@ const DELETE_SOURCE = gql`
 class ArticleDetail extends Component {
   static defaultProps = {
     createArticle() {},
+    onTextSelect() {},
   };
 
   state = {
@@ -158,6 +181,10 @@ class ArticleDetail extends Component {
     this.setState({
       hyperlinkInDialog: null,
     });
+  };
+
+  handleSelectionChange = selection => {
+    this.props.onTextSelect(selection.toString());
   };
 
   renderSourceForm = () => {
@@ -290,6 +317,8 @@ class ArticleDetail extends Component {
             )}
           </Mutation>
         </section>
+
+        <SelectionListener onChange={this.handleSelectionChange} />
 
         <style jsx>{`
           .hyperlinks {
