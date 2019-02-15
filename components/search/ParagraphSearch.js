@@ -9,14 +9,8 @@ class ParagraphSearch extends Component {
     text: '',
   };
 
-  handleSubmit = () => {
-    const { text } = this.props;
-    const article = { text };
-    this.props.onSubmit(article);
-  };
-
   render() {
-    const { text } = this.props;
+    const { text, onSubmit } = this.props;
 
     return (
       <div className="container">
@@ -28,7 +22,7 @@ class ParagraphSearch extends Component {
             {({ me, authorize }) => {
               if (me) {
                 return (
-                  <button type="button" onClick={this.handleSubmit}>
+                  <button type="button" onClick={onSubmit}>
                     送出文章
                   </button>
                 );

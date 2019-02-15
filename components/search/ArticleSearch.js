@@ -1,10 +1,11 @@
 import React from 'react';
 import gql from 'graphql-tag';
-
 import { Query } from 'react-apollo';
+import { withStyles, Typography } from '@material-ui/core';
+
 import { Link } from '../../routes';
 import { truncate, parseTag } from '../../lib/text';
-import { withStyles, Typography } from '@material-ui/core';
+import RequireLogin from '../common/RequireLogin';
 
 const styles = theme => ({
   container: {
@@ -72,10 +73,11 @@ class ArticleSearch extends React.Component {
   static defaultProps = {
     searchedText: '',
     articles: [],
+    onSubmit() {},
   };
 
   render() {
-    const { searchedText, articles, classes } = this.props;
+    const { searchedText, articles, classes, onSubmit } = this.props;
 
     return (
       <div className={classes.container}>
@@ -87,17 +89,39 @@ class ArticleSearch extends React.Component {
         {articles.map(article => (
           <Article key={article.id} article={article} classes={classes} />
         ))}
+
+        <RequireLogin>
+          {({ me, authorize }) => {
+            if (me) {
+              return (
+                <button type="button" onClick={onSubmit}>
+                  送出文章到資料庫
+                </button>
+              );
+            }
+
+            return (
+              <p>
+                請先{' '}
+                <button type="button" onClick={authorize}>
+                  登入
+                </button>{' '}
+                才能送出文章
+              </p>
+            );
+          }}
+        </RequireLogin>
       </div>
     );
   }
 }
 
-function ArticleSearchWrapper({ searchedText, classes }) {
+function ArticleSearchWrapper({ searchedText, classes, ...props }) {
   return (
     <Query query={LIST_ARTICLES} variables={{ inText: searchedText }}>
       {({ data, error, loading }) => {
         if (error) {
-          return <p>{error}</p>;
+          return <p>{error.toString()}</p>;
         }
         if (loading) {
           return <p>Loading...</p>;
@@ -107,6 +131,7 @@ function ArticleSearchWrapper({ searchedText, classes }) {
             searchedText={searchedText}
             articles={data.articles}
             classes={classes}
+            {...props}
           />
         );
       }}
