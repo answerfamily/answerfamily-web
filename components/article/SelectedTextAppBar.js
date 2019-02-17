@@ -4,7 +4,6 @@ import MuiAppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 
-import RequireLogin from '../common/RequireLogin';
 const END_TEXT_LENGTH = 10;
 
 const styles = theme => ({
@@ -37,31 +36,9 @@ function SelectedTextAppBar({
           <span className={classes.withEllipsis}>{selectedTextFirstPart}</span>
           {selectedTextSecondPart}
         </div>
-        <RequireLogin>
-          {({ me, authorize }) => {
-            if (!me) {
-              return (
-                <Button
-                  onClick={authorize}
-                  variant="outlined"
-                  color="secondary"
-                >
-                  登入後劃重點
-                </Button>
-              );
-            }
-
-            return (
-              <Button
-                onClick={onParagraphSubmit}
-                variant="outlined"
-                color="secondary"
-              >
-                標成待回應重點
-              </Button>
-            );
-          }}
-        </RequireLogin>
+        <Button onClick={onParagraphSubmit} variant="outlined" color="inherit">
+          標成待回應重點
+        </Button>
       </Toolbar>
     </MuiAppBar>
   );

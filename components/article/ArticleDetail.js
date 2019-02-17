@@ -1,10 +1,8 @@
 import { Component, PureComponent } from 'react';
 import blueGrey from '@material-ui/core/colors/blueGrey';
-import { produce } from 'immer';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 
-import NewParagraph from './NewParagraph';
 import ExistingParagraph from './ExistingParagraph';
 import SourcesForm from './SourcesForm';
 import Hyperlink from './Hyperlink';
@@ -32,15 +30,6 @@ const articleFragment = gql`
   ${Hyperlink.fragments.hyperlink}
 `;
 
-const NEW_PARAGRAPH = gql`
-  mutation($articleId: String!, $paragraph: ParagraphInput!) {
-    addParagraphToArticle(articleId: $articleId, paragraph: $paragraph) {
-      ...articleDetail
-    }
-  }
-  ${articleFragment}
-`;
-
 const DELETE_PARAGRAPH = gql`
   mutation($paragraphId: String!) {
     deleteParagraph(paragraphId: $paragraphId) {
@@ -49,10 +38,6 @@ const DELETE_PARAGRAPH = gql`
   }
   ${articleFragment}
 `;
-
-const EMPTY_PARAGRAPH = {
-  text: '',
-};
 
 class SelectionListener extends PureComponent {
   static defaultProps = {
@@ -73,53 +58,6 @@ class SelectionListener extends PureComponent {
 
   render() {
     return null;
-  }
-}
-
-class NewParagraphEditor extends Component {
-  state = {
-    articleId: '',
-    paragraph: EMPTY_PARAGRAPH,
-    createParagraph() {},
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const { articleId, createParagraph } = this.props;
-    const { paragraph } = this.state;
-    createParagraph({
-      variables: {
-        articleId,
-        paragraph,
-      },
-    });
-    this.setState(
-      produce(state => {
-        state.paragraph = EMPTY_PARAGRAPH;
-      })
-    );
-  };
-
-  handleParagraphTextChange = (_, text) => {
-    this.setState(
-      produce(({ paragraph }) => {
-        paragraph.text = text;
-      })
-    );
-  };
-
-  render() {
-    const { paragraph } = this.state;
-
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <NewParagraph
-          text={paragraph.text}
-          onTextChange={this.handleParagraphTextChange}
-        />
-        <button type="submit">新增段落</button>
-      </form>
-    );
   }
 }
 
@@ -184,7 +122,7 @@ class ArticleDetail extends Component {
   };
 
   handleSelectionChange = selection => {
-    this.props.onTextSelect(selection.toString());
+    this.props.onTextSelect(selection.toString().trim());
   };
 
   renderSourceForm = () => {
@@ -306,17 +244,6 @@ class ArticleDetail extends Component {
           articleRenderer={this.renderArticle}
           paragraphsRenderer={this.renderParagraphs}
         />
-        <section className="paragraph-panel">
-          <Mutation mutation={NEW_PARAGRAPH}>
-            {(createParagraph, { loading }) => (
-              <NewParagraphEditor
-                articleId={article.id}
-                createParagraph={createParagraph}
-                loading={loading}
-              />
-            )}
-          </Mutation>
-        </section>
 
         <SelectionListener onChange={this.handleSelectionChange} />
 
