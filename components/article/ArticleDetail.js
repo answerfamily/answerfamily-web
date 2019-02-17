@@ -10,6 +10,33 @@ import HyperlinkActionDialog from '../common/HyperlinkActionDialog';
 
 import { mark, nl2br, linkify } from '../../lib/text';
 import ArticleParagraphSections from '../common/ArticleParagraphSections';
+import { Typography, withStyles } from '@material-ui/core';
+
+const styles = theme => ({
+  header: {
+    ...theme.mixins.gutters(),
+    marginBottom: theme.spacing.unit * 2,
+    '& h6': {
+      color: theme.palette.text.secondary,
+    },
+  },
+  hyperlinks: {
+    display: 'flex',
+    flexFlow: 'row wrap',
+  },
+
+  paragraphPanel: {
+    background: blueGrey[50],
+  },
+
+  paragraphs: {
+    padding: theme.spacing.unit * 2,
+  },
+
+  isSearched: {
+    background: 'orange',
+  },
+});
 
 const articleFragment = gql`
   fragment articleDetail on Article {
@@ -153,11 +180,11 @@ class ArticleDetail extends Component {
   };
 
   renderHyperlinks = () => {
-    const { article } = this.props;
+    const { article, classes } = this.props;
 
     return (
       article.hyperlinks.length > 0 && (
-        <footer className="hyperlinks">
+        <footer className={classes.hyperlinks}>
           {article.hyperlinks
             .filter(h => h)
             .map((hyperlink, idx) => (
@@ -170,6 +197,7 @@ class ArticleDetail extends Component {
 
   renderArticle = ({ text, highlights }) => {
     const { searchedText } = this.state;
+    const { classes } = this.props;
 
     return (
       <article>
@@ -185,7 +213,7 @@ class ArticleDetail extends Component {
               {
                 stringsToMatch: [searchedText],
                 props: {
-                  className: 'is-searched',
+                  className: classes.isSearched,
                 },
               }
             ),
@@ -218,7 +246,7 @@ class ArticleDetail extends Component {
 
   render() {
     const { hyperlinkInDialog } = this.state;
-    const { article } = this.props;
+    const { article, classes } = this.props;
 
     if (!article) return <p>No such article</p>; // No such article
 
@@ -237,6 +265,11 @@ class ArticleDetail extends Component {
 
         {this.renderSourceForm()}
 
+        <header className={classes.header}>
+          <Typography component="h6" variant="subtitle2">
+            愛家論述
+          </Typography>
+        </header>
         <ArticleParagraphSections
           article={article.text}
           paragraphs={article.paragraphs}
@@ -246,28 +279,9 @@ class ArticleDetail extends Component {
         />
 
         <SelectionListener onChange={this.handleSelectionChange} />
-
-        <style jsx>{`
-          .hyperlinks {
-            display: flex;
-            flex-flow: row wrap;
-          }
-
-          .paragraph-panel {
-            background: ${blueGrey[50]};
-          }
-
-          .paragraphs {
-            padding: 16px;
-          }
-
-          article :global(mark.is-searched) {
-            background: orange;
-          }
-        `}</style>
       </>
     );
   }
 }
 
-export default ArticleDetail;
+export default withStyles(styles)(ArticleDetail);

@@ -26,7 +26,6 @@ import RequireLogin from '../common/RequireLogin';
 
 const styles = theme => ({
   container: {
-    ...theme.mixins.gutters(),
     margin: `${theme.spacing.unit * 2}px 0`,
   },
   header: {
