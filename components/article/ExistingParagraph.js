@@ -4,6 +4,7 @@ import Tab from '@material-ui/core/Tab';
 import Card from '@material-ui/core/Card';
 import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import gql from 'graphql-tag';
@@ -35,7 +36,7 @@ const styles = theme => ({
     padding: theme.spacing.unit,
     paddingRight: theme.spacing.unit * 2, // space for the trash button
     color: theme.palette.text.secondary,
-    borderLeft: `4px solid ${grey[440]}`,
+    borderLeft: `4px solid ${grey[400]}`,
     borderBottom: `1px solid ${theme.palette.divider}`,
     '& mark': {
       background: orange[500],
@@ -44,8 +45,7 @@ const styles = theme => ({
 
   replies: {
     margin: 0,
-    padding: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit + 4, // for border left
+    paddingLeft: 4, // for border left
     listStyle: 'none',
     position: 'relative' /* for rainbow border */,
 
@@ -59,6 +59,19 @@ const styles = theme => ({
       background:
         'linear-gradient(to bottom, #FF475A, #FF475A 44px, #FF8C41 44px, #FF8C41 88px, #F0DE00 88px, #F0DE00 112px, #70CF00 112px, #70CF00 136px, #43B0FF 136px, #43B0FF 160px, #8442FF 160px, #8442FF)',
     },
+  },
+
+  reply: {
+    padding: theme.spacing.unit,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+
+    '&:last-child': {
+      borderBottom: 0,
+    },
+  },
+
+  newReplyForm: {
+    padding: theme.spacing.unit,
   },
 });
 
@@ -88,12 +101,13 @@ const NEW_REPLY = gql`
   ${paragraphFragment}
 `;
 
-function NewReplyForm({ paragraphId }) {
+function NewReplyForm({ paragraphId, classes }) {
   return (
     <Mutation mutation={NEW_REPLY}>
-      {submit => {
+      {(submit, { loading }) => {
         return (
           <form
+            className={classes.newReplyForm}
             onSubmit={e => {
               e.preventDefault();
               submit({
@@ -105,17 +119,20 @@ function NewReplyForm({ paragraphId }) {
                   },
                 },
               });
+              e.target.reset();
             }}
           >
-            <label>
-              回應
-              <textarea name="replyText" />
-            </label>
-            <label>
-              給其他編輯的悄悄話
-              <textarea name="note" />
-            </label>
-            <button type="submit">送出回應</button>
+            <TextField
+              name="replyText"
+              placeholder="撰寫新回應"
+              multiline
+              rows="4"
+              variant="outlined"
+              fullWidth
+            />
+            <button disabled={loading} type="submit">
+              送出回應
+            </button>
           </form>
         );
       }}
@@ -290,11 +307,7 @@ class ExistingReplyForm extends Component {
 }
 
 function Reply({ reply, classes }) {
-  return (
-    <li className={classes.reply}>
-      {nl2br(linkify(reply.text))} ({reply.note})
-    </li>
-  );
+  return <li className={classes.reply}>{nl2br(linkify(reply.text))}</li>;
 }
 
 class ExistingParagraph extends Component {
@@ -359,12 +372,17 @@ class ExistingParagraph extends Component {
                 </li>
               )}
               {me && (
-                <li className={classes.newReplyForm}>
+                <li>
                   <Tabs onChange={this.handleTabChange} value={tab}>
                     <Tab label="寫新的回應" />
                     <Tab label="用舊的回應" />
                   </Tabs>
-                  {tab === 0 && <NewReplyForm paragraphId={paragraph.id} />}
+                  {tab === 0 && (
+                    <NewReplyForm
+                      paragraphId={paragraph.id}
+                      classes={classes}
+                    />
+                  )}
                   {tab === 1 && <ExistingReplyForm paragraph={paragraph} />}
                 </li>
               )}
