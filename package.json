@@ -10,8 +10,8 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@material-ui/core": "^3.5.1",
-    "@material-ui/icons": "^3.0.1",
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
     "apollo-boost": "^0.1.16",
     "auth0-js": "^9.8.2",
     "dotenv": "^6.1.0",
@@ -37,7 +37,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-react": "^7.11.1",
-    "jest": "^23.6.0",
+    "jest": "^24.1.0",
     "prettier": "^1.15.2"
   },
   "author": "MrOrz",
