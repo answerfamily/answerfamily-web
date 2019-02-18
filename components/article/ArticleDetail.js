@@ -11,6 +11,7 @@ import HyperlinkActionDialog from '../common/HyperlinkActionDialog';
 import { mark, nl2br, linkify } from '../../lib/text';
 import ArticleParagraphSections from '../common/ArticleParagraphSections';
 import { Typography, withStyles } from '@material-ui/core';
+import { orange, yellow } from '@material-ui/core/colors';
 
 const styles = theme => ({
   header: {
@@ -29,12 +30,22 @@ const styles = theme => ({
     background: blueGrey[50],
   },
 
-  paragraphs: {
-    padding: theme.spacing.unit * 2,
+  article: {
+    '& mark': {
+      background: yellow[500],
+      cursor: 'pointer',
+    },
+
+    // https://material-ui.com/customization/overrides/#use-rulename-to-reference-a-local-rule-within-the-same-style-sheet
+    '& mark$isSearched': {
+      background: orange[500],
+    },
   },
 
-  isSearched: {
-    background: 'orange',
+  isSearched: {},
+
+  paragraphs: {
+    padding: theme.spacing.unit * 2,
   },
 });
 
@@ -122,9 +133,12 @@ class ArticleDetail extends Component {
   };
 
   handleHighlightClick = e => {
-    this.setState({
-      searchedText: e.target.innerText,
-    });
+    const clickedText = e.target.innerText;
+
+    // Toggle searchedText
+    this.setState(({ searchedText }) => ({
+      searchedText: searchedText ? '' : clickedText,
+    }));
   };
 
   handleUrlClick = e => {
@@ -200,7 +214,7 @@ class ArticleDetail extends Component {
     const { classes } = this.props;
 
     return (
-      <article>
+      <article className={classes.article}>
         {nl2br(
           linkify(
             mark(
@@ -245,7 +259,7 @@ class ArticleDetail extends Component {
   };
 
   render() {
-    const { hyperlinkInDialog } = this.state;
+    const { hyperlinkInDialog, searchedText } = this.state;
     const { article, classes } = this.props;
 
     if (!article) return <p>No such article</p>; // No such article
@@ -276,6 +290,7 @@ class ArticleDetail extends Component {
           footerContentRenderer={this.renderHyperlinks}
           articleRenderer={this.renderArticle}
           paragraphsRenderer={this.renderParagraphs}
+          breakPureRender={searchedText} // Fake prop that breaks through PureComponent
         />
 
         <SelectionListener onChange={this.handleSelectionChange} />
