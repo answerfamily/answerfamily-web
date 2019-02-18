@@ -1,7 +1,8 @@
-import { Component, Fragment } from 'react';
+import { Component } from 'react';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Card from '@material-ui/core/Card';
+import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -9,6 +10,57 @@ import gql from 'graphql-tag';
 import { Query, Mutation } from 'react-apollo';
 import RequireLogin from '../common/RequireLogin';
 import { nl2br, mark, linkify } from '../../lib/text';
+import { withStyles } from '@material-ui/core';
+import { orange, grey } from '@material-ui/core/colors';
+
+const styles = theme => ({
+  root: {
+    position: 'relative', // for delete button
+    overflow: 'visible',
+  },
+
+  deleteButton: {
+    position: 'absolute',
+    width: '28px',
+    height: '28px',
+    minHeight: '28px',
+    fontSize: '18px',
+    right: theme.spacing.unit * -2,
+    top: theme.spacing.unit * -2,
+  },
+
+  quote: {
+    ...theme.typography.caption,
+    margin: 0,
+    padding: theme.spacing.unit,
+    paddingRight: theme.spacing.unit * 2, // space for the trash button
+    color: theme.palette.text.secondary,
+    borderLeft: `4px solid ${grey[440]}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    '& mark': {
+      background: orange[500],
+    },
+  },
+
+  replies: {
+    margin: 0,
+    padding: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit + 4, // for border left
+    listStyle: 'none',
+    position: 'relative' /* for rainbow border */,
+
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      height: '100%',
+      width: 4,
+      background:
+        'linear-gradient(to bottom, #FF475A, #FF475A 44px, #FF8C41 44px, #FF8C41 88px, #F0DE00 88px, #F0DE00 112px, #70CF00 112px, #70CF00 136px, #43B0FF 136px, #43B0FF 160px, #8442FF 160px, #8442FF)',
+    },
+  },
+});
 
 const paragraphFragment = gql`
   fragment articleDetailParagraph on Paragraph {
@@ -237,6 +289,14 @@ class ExistingReplyForm extends Component {
   }
 }
 
+function Reply({ reply, classes }) {
+  return (
+    <li className={classes.reply}>
+      {nl2br(linkify(reply.text))} ({reply.note})
+    </li>
+  );
+}
+
 class ExistingParagraph extends Component {
   static defaultProps = {
     paragraph: null, // should be an object
@@ -262,79 +322,58 @@ class ExistingParagraph extends Component {
   };
 
   render() {
-    const { paragraph, highlightedText } = this.props;
+    const { paragraph, highlightedText, classes } = this.props;
     const { tab } = this.state;
+
     return (
-      <Card style={{ marginBottom: 8 }}>
-        <header>
-          <Typography color="secondary" style={{ marginRight: 'auto' }}>
-            原句
-          </Typography>
-          <RequireLogin>
-            {({ me }) =>
-              me &&
-              paragraph.canDelete && (
-                <DeleteIcon
-                  color="secondary"
-                  size="small"
-                  onClick={this.handleDelete}
-                />
-              )
-            }
-          </RequireLogin>
-        </header>
-        <article className="paragraph">
-          <Typography color="textSecondary">
-            {nl2br(
-              mark(paragraph.text, {
-                stringsToMatch: [highlightedText],
-              })
+      <RequireLogin>
+        {({ me }) => (
+          <Card className={classes.root}>
+            {me && paragraph.canDelete && (
+              <Fab
+                className={classes.deleteButton}
+                size="small"
+                onClick={this.handleDelete}
+              >
+                <DeleteIcon fontSize="inherit" />
+              </Fab>
             )}
-          </Typography>
-        </article>
-        <hr />
-        現有回應
-        <ul>
-          {paragraph.paragraphReplies.map(({ reply }) => (
-            <li key={reply.id}>
-              {nl2br(linkify(reply.text))} ({reply.note})
-            </li>
-          ))}
-        </ul>
-        <RequireLogin>
-          {({ me, authorize }) => {
-            if (!me) {
-              return (
-                <p>
-                  請<button onClick={authorize}>登入</button>來送出回應
-                </p>
-              );
-            }
-            return (
-              <Fragment>
-                <hr />
-                <Tabs onChange={this.handleTabChange} value={tab}>
-                  <Tab label="寫新的回應" />
-                  <Tab label="用舊的回應" />
-                </Tabs>
-                {tab === 0 && <NewReplyForm paragraphId={paragraph.id} />}
-                {tab === 1 && <ExistingReplyForm paragraph={paragraph} />}
-              </Fragment>
-            );
-          }}
-        </RequireLogin>
-        <style jsx>{`
-          header {
-            display: flex;
-            padding: 4px;
-          }
-          .paragraph :global(mark) {
-            background: orange;
-          }
-        `}</style>
-      </Card>
+            <blockquote className={classes.quote}>
+              {nl2br(
+                mark(paragraph.text, {
+                  stringsToMatch: [highlightedText],
+                })
+              )}
+            </blockquote>
+
+            <ul className={classes.replies}>
+              {paragraph.paragraphReplies.length ? (
+                paragraph.paragraphReplies.map(({ reply }) => (
+                  <Reply key={reply.id} reply={reply} classes={classes} />
+                ))
+              ) : (
+                <li>
+                  <Typography component="p" variant="body2">
+                    目前還沒有回應
+                  </Typography>
+                </li>
+              )}
+              {me && (
+                <li className={classes.newReplyForm}>
+                  <Tabs onChange={this.handleTabChange} value={tab}>
+                    <Tab label="寫新的回應" />
+                    <Tab label="用舊的回應" />
+                  </Tabs>
+                  {tab === 0 && <NewReplyForm paragraphId={paragraph.id} />}
+                  {tab === 1 && <ExistingReplyForm paragraph={paragraph} />}
+                </li>
+              )}
+            </ul>
+          </Card>
+        )}
+      </RequireLogin>
     );
   }
 }
 
-export default ExistingParagraph;
+export default withStyles(styles)(ExistingParagraph);
