@@ -4,7 +4,7 @@ import MuiAppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 
-const END_TEXT_LENGTH = 10;
+const END_TEXT_LENGTH = 5;
 
 const styles = theme => ({
   selectedText: {
@@ -33,11 +33,13 @@ function SelectedTextAppBar({
     <MuiAppBar position="fixed" color="primary">
       <Toolbar>
         <div className={classes.selectedText}>
-          <span className={classes.withEllipsis}>{selectedTextFirstPart}</span>
+          <span className={classes.withEllipsis}>
+            已選擇：{selectedTextFirstPart}
+          </span>
           {selectedTextSecondPart}
         </div>
         <Button onClick={onParagraphSubmit} variant="outlined" color="inherit">
-          標成待回應重點
+          標為待回重點
         </Button>
       </Toolbar>
     </MuiAppBar>
