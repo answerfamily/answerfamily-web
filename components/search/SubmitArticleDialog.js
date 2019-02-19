@@ -16,11 +16,15 @@ import SourcesForm from '../common/SourcesForm';
 import LoadingButtonWrapper from '../common/LoadingButtonWrapper';
 import Redirect from '../common/Redirect';
 
-const styles = {
+const styles = theme => ({
   title: {
     flex: 1,
   },
-};
+
+  article: {
+    ...theme.mixins.gutters(),
+  },
+});
 
 export const CREATE_ARTCILE = gql`
   mutation($article: ArticleInput) {
@@ -100,7 +104,16 @@ class ArticleSubmissionForm extends React.Component {
           onAdd={this.handleSourceAdd}
           onDelete={this.handleSourceDelete}
         />
-        <TextField name="text" defaultValue={text} multiline fullWidth />
+        <article className={classes.article}>
+          <TextField
+            label="新愛家論述"
+            variant="outlined"
+            name="text"
+            defaultValue={text}
+            multiline
+            fullWidth
+          />
+        </article>
       </form>
     );
   }
