@@ -1,32 +1,38 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-
-import AppBarSearchForm from '../components/search/AppBarSearchForm';
+import { Hidden } from '@material-ui/core';
 
 import AppBar from '../components/common/AppBar';
 import Layout from '../components/common/Layout';
+
 import { SEARCHED_DATA } from '../components/common/ArticleSearchForm';
+
+import AppBarTabs from '../components/search/AppBarTab';
+import AppBarSearchForm from '../components/search/AppBarSearchForm';
 import ParagraphSearch from '../components/search/ParagraphSearch';
 import ArticleSearch from '../components/search/ArticleSearch';
-import Router from 'next/router';
-import AppBarTabs from '../components/search/AppBarTab';
-import { Hidden } from '@material-ui/core';
+import SubmitArticleDialog from '../components/search/SubmitArticleDialog';
 
 class SearchPage extends React.Component {
   state = {
     currentTab: 'articles',
+    isSubmitDialogOpen: false,
   };
 
-  handleArticleSubmit = () => {
-    Router.push('/submit-article');
+  openDialog = () => {
+    this.setState({ isSubmitDialogOpen: true });
   };
 
   handleTabChange = (event, tabValue) => {
     this.setState({ currentTab: tabValue });
   };
 
+  handleDialogClose = () => {
+    this.setState({ isSubmitDialogOpen: false });
+  };
+
   render() {
-    const { currentTab } = this.state;
+    const { currentTab, isSubmitDialogOpen } = this.state;
 
     return (
       <Query query={SEARCHED_DATA}>
@@ -66,14 +72,20 @@ class SearchPage extends React.Component {
               {currentTab === 'articles' ? (
                 <ArticleSearch
                   searchedText={searchedText}
-                  onSubmit={this.handleArticleSubmit}
+                  onSubmit={this.openDialog}
                 />
               ) : (
                 <ParagraphSearch
                   text={searchedText}
-                  onSubmit={this.handleArticleSubmit}
+                  onSubmit={this.openDialog}
                 />
               )}
+
+              <SubmitArticleDialog
+                open={isSubmitDialogOpen}
+                searchedData={data.searchedData}
+                onClose={this.handleDialogClose}
+              />
             </Layout>
           );
         }}
