@@ -23,6 +23,7 @@ const styles = theme => ({
 
   article: {
     ...theme.mixins.gutters(),
+    marginBottom: theme.spacing.unit * 2,
   },
 });
 
@@ -59,6 +60,8 @@ class ArticleSubmissionForm extends React.Component {
   }
 
   handleSubmit = evt => {
+    evt.preventDefault();
+
     const form = evt.target;
     const articleInput = {
       text: form.text.value,
@@ -92,7 +95,7 @@ class ArticleSubmissionForm extends React.Component {
             <Typography variant="h6" color="inherit" className={classes.title}>
               把愛家論述送進資料庫
             </Typography>
-            <LoadingButtonWrapper loading={loading}>
+            <LoadingButtonWrapper loading={loading} color="secondary">
               <Button disabled={loading} type="submit" color="inherit">
                 送出
               </Button>

@@ -20,6 +20,7 @@ function LoadingButtonWrapper({
   loading = false,
   size = 24,
   classes,
+  ...progressProps
 }) {
   return (
     <div className={classes.wrapper}>
@@ -29,6 +30,7 @@ function LoadingButtonWrapper({
           className={classes.loading}
           size={size}
           style={{ '--shift': `-${size / 2}px` }}
+          {...progressProps}
         />
       )}
     </div>
