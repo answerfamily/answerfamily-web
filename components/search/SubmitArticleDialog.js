@@ -7,6 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import { Mutation } from 'react-apollo';
@@ -79,7 +80,7 @@ class ArticleSubmissionForm extends React.Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <AppBar className={classes.appBar}>
+        <AppBar className={classes.appBar} position="static">
           <Toolbar>
             <IconButton color="inherit" onClick={onClose} aria-label="Close">
               <CloseIcon />
@@ -99,7 +100,7 @@ class ArticleSubmissionForm extends React.Component {
           onAdd={this.handleSourceAdd}
           onDelete={this.handleSourceDelete}
         />
-        <textarea name="text" defaultValue={text} />
+        <TextField name="text" defaultValue={text} multiline fullWidth />
       </form>
     );
   }
