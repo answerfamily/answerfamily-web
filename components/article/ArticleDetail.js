@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 
 import ExistingParagraph from './ExistingParagraph';
-import SourcesForm from './SourcesForm';
+import SourcesForm from '../common/SourcesForm';
 import Hyperlink from './Hyperlink';
 import HyperlinkActionDialog from '../common/HyperlinkActionDialog';
 

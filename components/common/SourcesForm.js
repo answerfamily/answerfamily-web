@@ -56,7 +56,10 @@ class Source extends PureComponent {
         <ListItemAvatar>
           <Avatar className={classes.preview} src={topImageUrl} />
         </ListItemAvatar>
-        <ListItemText primary={note} secondary={linkify(url)} />
+        <ListItemText
+          primary={note}
+          secondary={linkify(url, { props: { target: '_blank' } })}
+        />
         {onDelete && (
           <ListItemSecondaryAction>
             <IconButton onClick={this.handleDelete}>
