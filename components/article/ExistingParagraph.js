@@ -85,7 +85,6 @@ const paragraphFragment = gql`
       reply {
         id
         text
-        note
         createdAt
       }
     }
@@ -113,10 +112,7 @@ function NewReplyForm({ paragraphId, classes }) {
               submit({
                 variables: {
                   paragraphId,
-                  reply: {
-                    text: e.target.replyText.value,
-                    note: e.target.note.value,
-                  },
+                  reply: { text: e.target.replyText.value },
                 },
               });
               e.target.reset();
